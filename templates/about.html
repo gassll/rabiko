@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    О нас
+{% endblock %}
+
+{% block content %}
+
+    <style>
+        .about-page {
+            padding: 10px 0;
+        }
+
+        .about-card {
+            background: #efe6da;
+            border-radius: 20px;
+            padding: 50px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        /* title */
+        .about-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #3a2f2a;
+        }
+
+        /* text */
+        .about-subtitle {
+            font-size: 18px;
+            color: #7b6a5f;
+            line-height: 1.7;
+        }
+
+        /* IMAGE */
+        .about-image {
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* cards */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .about-item {
+            background: #f7f3ee;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .about-item h3 {
+            margin-top: 0;
+            color: #3a2f2a;
+            margin-bottom: 15px;
+        }
+
+        .about-item p {
+            color: #6b5b4f;
+            line-height: 1.6;
+        }
+
+        /* banner */
+        .about-banner {
+            background: linear-gradient(
+                    135deg,
+                    #f3e9dc,
+                    #efe6da
+            );
+
+            padding: 40px;
+            border-radius: 20px;
+
+            text-align: center;
+        }
+
+        .about-banner h2 {
+            margin: 0 0 15px;
+            color: #3a2f2a;
+            font-size: 34px;
+        }
+
+        .about-banner p {
+            color: #6b5b4f;
+            font-size: 17px;
+            line-height: 1.7;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+
+            margin-bottom: 25px;
+            margin-top: 20px;
+
+            padding: 10px 16px;
+
+            background: #efe6da;
+
+            border: 2px solid #3a2f2a;
+
+            border-radius: 12px;
+
+            color: #3a2f2a;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #3a2f2a;
+            color: white;
+
+            transform: translateY(-2px);
+        }
+    </style>
+    {% if request.path != "/" %}
+
+        <a href="/" class="back-btn">
+            ← Вернуться на главную
+        </a>
+
+    {% endif %}
+
+    <section class="about-page">
+
+        <div class="about-card">
+
+            <!-- TEXT -->
+            <div>
+
+                <div class="about-title">
+                    Rabiko
+                </div>
+
+                <div class="about-subtitle">
+
+                    Rabiko — бренд одежды для новорожденных,
+                    созданный с любовью и заботой о малышах.
+
+                    <br><br>
+
+                    Наша миссия — обеспечить комфорт и стиль
+                    самым маленьким, используя только
+                    высококачественные материалы
+                    и уникальный дизайн.
+
+                </div>
+
+            </div>
+
+            <!-- IMAGE -->
+            <div class="about-image">
+
+                <img src="{% static 'media/images/about.webp' %}"
+                     alt="Rabiko">
+
+            </div>
+
+            <!-- CARDS -->
+            <div class="about-grid">
+
+                <div class="about-item">
+
+                    <h3>Комфорт</h3>
+
+                    <p>
+                        Мы создаём одежду, в которой малышам
+                        удобно двигаться, спать и познавать мир.
+                    </p>
+
+                </div>
+
+                <div class="about-item">
+
+                    <h3>Качество</h3>
+
+                    <p>
+                        Используем только мягкие,
+                        безопасные и качественные ткани.
+                    </p>
+
+                </div>
+
+                <div class="about-item">
+
+                    <h3>Стиль</h3>
+
+                    <p>
+                        Минималистичный дизайн,
+                        вдохновлённый теплом семьи и детства.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- BANNER -->
+            <div class="about-banner">
+
+                <h2>
+                    С любовью к каждому малышу
+                </h2>
+
+                <p>
+                    Мы верим, что детская одежда должна быть
+                    не только красивой, но и дарить ощущение
+                    заботы, уюта и безопасности каждый день.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

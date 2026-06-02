@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+
+<style>
+/* форма по центру */
+.auth-wrapper {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* карточка */
+.auth-card {
+    background: white;
+    padding: 50px 45px;
+    border-radius: 24px;
+    box-shadow: 0 25px 55px rgba(0, 0, 0, 0.12);
+    width: 100%;
+    max-width: 480px;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* заголовок */
+.auth-card h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #3a2f2a;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.auth-card .subtitle {
+    text-align: center;
+    color: #8b7355;
+    margin-bottom: 35px;
+    font-size: 15px;
+}
+
+/* поля */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: #3a2f2a;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1.5px solid #d8cfc2;
+    border-radius: 14px;
+    font-size: 15px;
+    transition: all 0.3s;
+    background: white;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #a07c5a;
+    box-shadow: 0 0 0 4px rgba(160, 124, 90, 0.1);
+}
+
+/* кнопка */
+.btn-login {
+    width: 100%;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #a07c5a, #8c6a4c);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 5px;
+    display: block;
+    box-sizing: border-box;
+}
+
+.btn-login:hover {
+    background: linear-gradient(135deg, #8c6a4c, #7a5a40);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(160, 124, 90, 0.3);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* ссылка */
+.register-link {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 15px;
+    color: #6b5840;
+}
+
+.register-link a {
+    color: #a07c5a;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+    color: #7a5a40;
+}
+
+/* ошибки */
+.errorlist {
+    list-style: none;
+    margin-top: 8px;
+    padding: 0;
+}
+
+.errorlist li {
+    color: #c0392b;
+    font-size: 13px;
+}
+
+.alert-error {
+    background: #fdf0ed;
+    border-left: 3px solid #c0392b;
+    color: #a0522d;
+    padding: 12px 18px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+/* подсказки - красивые */
+.helptext {
+    display: block;
+    font-size: 12px;
+    color: #8b7355;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #f9f6f2;
+    border-radius: 10px;
+    line-height: 1.4;
+}
+
+/* список в подсказках */
+.helptext ul {
+    margin: 5px 0 0 0;
+    padding-left: 20px;
+}
+
+.helptext li {
+    margin: 3px 0;
+}
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2>Создать аккаунт</h2>
+        <div class="subtitle">Зарегистрируйтесь чтобы продолжить</div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="id_username">Имя пользователя</label>
+                <input type="text" name="username" id="id_username" class="form-control" autofocus required>
+                {% if form.username.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.username.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <span class="helptext">
+                    Обязательное поле. Не более 150 символов.<br>
+                    Можно использовать буквы, цифры и символы @/./+/-/_
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                <input type="email" name="email" id="id_email" class="form-control" required>
+                {% if form.email.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.email.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password1">Пароль</label>
+                <input type="password" name="password1" id="id_password1" class="form-control" required>
+                {% if form.password1.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password1.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <span class="helptext">
+                    Пароль должен содержать не менее 8 символов<br>
+                    Не должен быть слишком простым или распространенным<br>
+                    Не может состоять только из цифр
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">Подтверждение пароля</label>
+                <input type="password" name="password2" id="id_password2" class="form-control" required>
+                {% if form.password2.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password2.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <span class="helptext">Введите тот же пароль, что и выше, для подтверждения</span>
+            </div>
+
+            <button type="submit" class="btn-login">
+                Зарегистрироваться
+            </button>
+        </form>
+
+        <div class="register-link">
+            Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

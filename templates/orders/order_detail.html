@@ -1,0 +1,31 @@
+{% extends "registration/../base.html" %}
+
+{% block title %}
+Заказ #{{ order.id }}
+{% endblock %}
+
+{% block content %}
+
+<h1>🧾 Заказ #{{ order.id }}</h1>
+
+<p><b>Статус:</b> {{ order.status }}</p>
+<p><b>Сумма:</b> {{ order.total_price }} ₽</p>
+<p><b>Дата:</b> {{ order.created_at }}</p>
+
+<hr>
+
+<h3>Товары</h3>
+
+{% for item in order.items.all %}
+    <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #ddd;">
+        <div>
+            {{ item.product_variant }} (x{{ item.quantity }})
+        </div>
+
+        <div>
+            {{ item.price }} ₽
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}

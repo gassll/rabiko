@@ -1,0 +1,55 @@
+{% extends "registration/../base.html" %}
+
+{% block title %}
+    Корзина
+{% endblock %}
+
+{% block content %}
+
+    <h1>🛒 Ваша корзина</h1>
+
+    {% if items %}
+
+        {% for item in items %}
+            <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #ddd;">
+
+                <div>
+                    <div><b>{{ item.variant }}</b></div>
+
+                    <div>
+                        Цена: {{ item.price }} |
+                        Кол-во: {{ item.quantity }} |
+                        Сумма: {{ item.sum }}
+                    </div>
+                </div>
+
+                <div>
+                    <a href="{% url 'remove_from_cart' item.variant.id %}"
+                       style="color:white; background:red; padding:5px 10px; text-decoration:none;">
+                        Удалить
+                    </a>
+                </div>
+
+            </div>
+        {% endfor %}
+
+        <h2 style="text-align:right; margin-top:20px;">
+            Итого: {{ total }}
+        </h2>
+
+        <div style="text-align:right;">
+            <a href="{% url 'checkout' %}"
+               style="display:inline-block; padding:10px 15px; background:green; color:white; text-decoration:none; margin-top:10px;">
+                Перейти к оформлению
+            </a>
+        </div>
+
+    {% else %}
+
+        <p style="text-align:center; padding:40px; color:gray;">
+            Корзина пустая 🛒
+        </p>
+
+    {% endif %}
+
+{% endblock %}

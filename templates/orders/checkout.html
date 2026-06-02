@@ -1,0 +1,57 @@
+{% extends "registration/../base.html" %}
+
+{% block title %}
+Оформление заказа
+{% endblock %}
+
+{% block content %}
+
+<h1>🧾 Оформление заказа</h1>
+
+{% if items %}
+
+    <h3>Товары в заказе</h3>
+
+    {% for item in items %}
+        <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #ddd;">
+            <div>
+                {{ item.variant }} (x{{ item.quantity }})
+            </div>
+
+            <div>
+                {{ item.sum }} ₽
+            </div>
+        </div>
+    {% endfor %}
+
+    <h2 style="text-align:right; margin-top:20px;">
+        Итого: {{ total }} ₽
+    </h2>
+
+    <hr style="margin:20px 0;">
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <h3>Выберите адрес доставки</h3>
+
+        {% for address in addresses %}
+            <label style="display:block; margin-bottom:10px;">
+                <input type="radio" name="address" value="{{ address.id }}" required>
+                {{ address.city }}, {{ address.street }}, {{ address.house }}
+            </label>
+        {% endfor %}
+
+        <button type="submit"
+                style="margin-top:20px; padding:10px 15px; background:#a07c5a; color:white; border:none; border-radius:6px;">
+            Подтвердить заказ
+        </button>
+    </form>
+
+{% else %}
+
+    <p>Корзина пустая 🛒</p>
+
+{% endif %}
+
+{% endblock %}

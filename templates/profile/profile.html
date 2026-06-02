@@ -1,0 +1,42 @@
+{% extends 'profile/base_profile.html' %}
+
+{% block profile_content %}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+
+        <h3>Добро пожаловать, {{ user.first_name|default:user.username }} 👋</h3>
+
+        <p class="text-muted">
+            Это ваш профиль Rabiko Kids
+        </p>
+
+        <div class="row mt-4 g-3">
+
+            <div class="col-md-4">
+                <div class="p-3 bg-light rounded">
+                    <h5>Заказы</h5>
+                    <p class="mb-0">0</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-3 bg-light rounded">
+                    <h5>Избранное</h5>
+                    <p class="mb-0">0</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="p-3 bg-light rounded">
+                    <h5>Корзина</h5>
+                    <p class="mb-0">0</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
