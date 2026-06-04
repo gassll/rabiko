@@ -18,7 +18,8 @@ def catalog_view(request):
         products = products.filter(name__icontains=query)
 
     return render(request, "catalog/catalog.html", {
-        "products": products
+        "products": products,
+        "query": query
     })
 
 
@@ -38,7 +39,7 @@ def about_view(request):
     return render(request, "about.html")
 
 
-#ПРОФИЛЬ (ЕДИНЫЙ!)
+# ПРОФИЛЬ (ЕДИНЫЙ!)
 @login_required
 def profile(request):
     context = {
@@ -57,7 +58,7 @@ def profile_favorites(request):
     return render(request, "profile/profile_favorites.html")
 
 
-#ЗАКАЗЫ
+# ЗАКАЗЫ
 @login_required
 def profile_orders(request):
     return render(request, "profile/profile_orders.html")
@@ -66,7 +67,8 @@ def profile_orders(request):
 #  НАСТРОЙКИ
 @login_required
 def profile_settings(request):
-    return render(request, "profile/profile_settings.html")
+    return render(request, "profile/profile_edit.html")
+
 
 @login_required(login_url='login')
 def favorites_view(request):

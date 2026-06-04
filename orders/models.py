@@ -5,10 +5,32 @@ from catalog.models import ProductVariant
 
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    status = models.CharField(max_length=50)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+    STATUS_CHOICES = (
+        ('new', 'Новый'),
+        ('paid', 'Оплачен'),
+        ('sent', 'Отправлен'),
+        ('done', 'Получен'),
+    )
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+
+    status = models.CharField(
+        max_length=50,
+        choices=STATUS_CHOICES,
+        default='new'
+    )
+
+    total_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
 
 class OrderItem(models.Model):

@@ -1,11 +1,170 @@
-{% extends 'profile/base_profile.html' %}
+{% extends "profile/base_profile.html" %}
 
 {% block profile_content %}
-<h4 style="color: #3a2f2a;">Мои заказы</h4>
-<p style="color: #8b7355;">Список всех ваших заказов</p>
 
-<div class="text-center py-5">
-    <i class="fas fa-shopping-bag fa-3x mb-3" style="color: #d8cfc2;"></i>
-    <p style="color: #8b7355;">У вас пока нет заказов</p>
-</div>
+    <style>
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #3f332b;
+            margin-bottom: 30px;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid #e6ddd5;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .orders-table th {
+            background: #f7f1eb;
+            color: #6b4f3a;
+            font-weight: 600;
+            text-align: left;
+            padding: 16px;
+        }
+
+        .orders-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f1ebe6;
+        }
+
+        .orders-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .order-link {
+            color: #6b4f3a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .order-link:hover {
+            text-decoration: underline;
+        }
+
+        .empty-orders {
+            padding: 40px;
+            text-align: center;
+            background: #f7f1eb;
+            border-radius: 16px;
+            color: #6b4f3a;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-new {
+            background: #f7f1eb;
+            color: #6b4f3a;
+        }
+
+        .status-paid {
+            background: #e8f0ff;
+            color: #3b5bcc;
+        }
+
+        .status-sent {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-success {
+            background: #e8f7ed;
+            color: #2e7d32;
+        }
+
+    </style>
+
+    <h1 class="page-title">
+        Мои заказы
+    </h1>
+
+    {% if orders %}
+
+        <table class="orders-table">
+
+            <thead>
+            <tr>
+                <th>№ заказа</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Сумма</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {% for order in orders %}
+
+                <tr>
+                    <td>#{{ order.id }}</td>
+
+                    <td>
+                        {{ order.created_at|date:"d.m.Y" }}
+                    </td>
+                    <td>
+
+                        {% if order.status == 'done' %}
+                            <span class="status status-success">
+        {{ order.get_status_display }}
+    </span>
+
+                        {% elif order.status == 'paid' %}
+                            <span class="status status-paid">
+        {{ order.get_status_display }}
+    </span>
+
+                        {% elif order.status == 'sent' %}
+                            <span class="status status-sent">
+        {{ order.get_status_display }}
+    </span>
+
+                        {% else %}
+                            <span class="status status-new">
+        {{ order.get_status_display }}
+    </span>
+                        {% endif %}
+
+                    </td>
+                    <td>
+                        {{ order.total_price }} ₽
+                    </td>
+
+                    <td>
+                        <a href=""
+                           class="order-link">
+                            Подробнее
+                        </a>
+
+{#                        <a href="{% url 'order_detail' order.id %}" class="order-link">#}
+                        {#    Подробнее#}
+                        {#</a>#}
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    {% else %}
+
+        <div class="empty-orders">
+            У вас пока нет заказов
+        </div>
+
+    {% endif %}
+
 {% endblock %}

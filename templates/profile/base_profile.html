@@ -1,213 +1,251 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block title %}Личный кабинет{% endblock %}
 
 {% block content %}
 
     <style>
-        .profile-container {
+
+        .profile-layout {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            min-height: 70vh;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns:260px 1fr;
+            gap: 30px;
         }
 
         /* SIDEBAR */
+
         .profile-sidebar {
-            background: #efe6da;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 20px;
+            background: #fff;
+            border: 1px solid #ececec;
+            border-radius: 20px;
+            overflow: hidden;
+            height: fit-content;
         }
 
-        /* AVATAR */
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #a07c5a, #8c6a4c);
+        .profile-user {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid #ececec;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
+            background: #f3f4f6;
+            margin: 0 auto 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            font-size: 32px;
+            font-weight: 700;
+            color: #666;
         }
 
-        .profile-avatar span {
-            font-size: 42px;
-            color: white;
-        }
-
-        /* USER INFO */
-        .profile-sidebar h3 {
-            color: #3a2f2a;
-            font-size: 20px;
-            text-align: center;
+        .username {
+            font-size: 24px;
+            font-weight: 700;
             margin-bottom: 5px;
         }
 
-        .profile-sidebar p {
-            color: #8b7355;
-            text-align: center;
+        .email {
+            color: #888;
             font-size: 14px;
-            margin-bottom: 25px;
+        }
+
+        .empty {
+            color: #c0392b;
         }
 
         /* MENU */
-        .profile-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
 
-        .profile-menu li {
-            margin-bottom: 10px;
-        }
-
-        .profile-menu a {
+        .menu {
             display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            color: #3a2f2a;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .menu a {
             text-decoration: none;
+            color: #333;
+            padding: 14px 18px;
             border-radius: 12px;
-            font-weight: 600;
-            transition: 0.2s;
+            margin-bottom: 8px;
+            transition: .2s;
+            font-weight: 500;
         }
 
-        .profile-menu a i {
-            width: 24px;
-            margin-right: 10px;
-            color: #a07c5a;
+        .menu a:hover {
+            background: #f7f8fb;
         }
 
-        .profile-menu a:hover {
-            background: #faf7f2;
-            transform: translateX(3px);
-        }
-
-        /* ACTIVE */
-        .profile-menu a.active {
-            background: linear-gradient(135deg, #a07c5a, #8c6a4c);
-            color: white;
-            box-shadow: 0 8px 20px rgba(160, 124, 90, 0.25);
-        }
-
-        .profile-menu a.active i {
-            color: white;
-        }
-
-        /* LOGOUT */
-        .logout-link {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #f0e8df;
+        .menu a.active {
+            background: #f3ebe4;
+            color: #6b4f3a;
+            font-weight: 700;
         }
 
         .logout-btn {
-            width: 100%;
-            background: none;
+            width: calc(100% - 40px);
+            margin: 10px 20px 20px;
+            padding: 12px;
             border: none;
-            padding: 12px 15px;
-            text-align: left;
             border-radius: 12px;
-            color: #c0392b;
+            background: #ff6b6b;
+            color: white;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .logout-btn:hover {
-            background: #fff0f0;
+            opacity: .9;
         }
 
         /* CONTENT */
+
         .profile-content {
             background: white;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ececec;
+            border-radius: 20px;
+            padding: 35px;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .profile-sidebar {
-                position: static;
-                margin-bottom: 20px;
+        /* SUCCESS MESSAGE */
+
+        .alert-success {
+            background: #f7f1eb;
+            border: 1px solid #d9c5b4;
+            color: #6b4f3a;
+            padding: 15px 18px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            animation: fadeIn .3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
+
+        /* MOBILE */
+
+        @media (max-width: 900px) {
+
+            .profile-layout {
+                grid-template-columns:1fr;
+            }
+
+        }
+
     </style>
 
-    <div class="profile-container">
-        <div class="row g-4">
+    <div class="profile-layout">
 
-            <!-- SIDEBAR -->
-            <div class="col-md-4 col-lg-3">
-                <div class="profile-sidebar">
+        <!-- SIDEBAR -->
+        <aside class="profile-sidebar">
 
-                    <div class="profile-avatar">
-                        <span>{{ user.username|make_list|first|upper }}</span>
-                    </div>
+            <div class="profile-user">
 
-                    <h3>{{ user.first_name|default:user.username }}</h3>
-                    <p>{{ user.email }}</p>
-
-                    <ul class="profile-menu">
-
-                        <li>
-                            <a href="{% url 'profile' %}"
-                               class="{% if request.resolver_match and request.resolver_match.url_name == 'profile' %}active{% endif %}">
-                                <i class="fas fa-user"></i> Мой профиль
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'profile_orders' %}"
-                               class="{% if request.resolver_match and request.resolver_match.url_name == 'profile_orders' %}active{% endif %}">
-                                <i class="fas fa-shopping-bag"></i> Мои заказы
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'profile_favorites' %}"
-                               class="{% if request.resolver_match and request.resolver_match.url_name == 'profile_favorites' %}active{% endif %}">
-                                <i class="fas fa-heart"></i> Избранное
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'profile_settings' %}"
-                               class="{% if request.resolver_match and request.resolver_match.url_name == 'profile_settings' %}active{% endif %}">
-                                <i class="fas fa-cog"></i> Настройки
-                            </a>
-                        </li>
-
-                    </ul>
-
-                    <div class="logout-link">
-                        <form method="post" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="logout-btn">
-                                <i class="fas fa-sign-out-alt"></i> Выйти
-                            </button>
-                        </form>
-                    </div>
-
+                <div class="avatar">
+                    {{ request.user.username|first|upper }}
                 </div>
+
+                <div class="username">
+                    {{ request.user.username }}
+                </div>
+
+                <div class="email">
+                    {% if request.user.email %}
+                        {{ request.user.email }}
+                    {% else %}
+                        <span class="empty">
+                        Email не указан
+                    </span>
+                    {% endif %}
+                </div>
+
             </div>
 
-            <!-- CONTENT -->
-            <div class="col-md-8 col-lg-9">
-                <div class="profile-content">
-                    {% block profile_content %}
-                    {% endblock %}
-                </div>
-            </div>
+            <nav class="menu">
 
-        </div>
+                <a href="{% url 'profile' %}"
+                   class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                    Обзор
+                </a>
+
+                <a href="{% url 'profile_orders' %}"
+                   class="{% if request.resolver_match.url_name == 'profile_orders' %}active{% endif %}">
+                    Мои заказы
+                </a>
+
+                <a href="{% url 'profile_favorites' %}"
+                   class="{% if request.resolver_match.url_name == 'profile_favorites' %}active{% endif %}">
+                    Избранное
+                </a>
+
+                <a href="{% url 'profile_edit' %}"
+                   class="{% if request.resolver_match.url_name == 'profile_edit' %}active{% endif %}">
+                    Редактировать профиль
+                </a>
+
+                <a href="{% url 'profile_password' %}"
+                   class="{% if request.resolver_match.url_name == 'profile_password' %}active{% endif %}">
+                    Сменить пароль
+                </a>
+
+            </nav>
+
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">
+                    Выйти
+                </button>
+            </form>
+
+        </aside>
+
+        <!-- CONTENT -->
+        <section class="profile-content">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block profile_content %}
+            {% endblock %}
+
+        </section>
+
     </div>
+
+    <script>
+
+        setTimeout(() => {
+
+            document.querySelectorAll('.alert-success').forEach(el => {
+
+                el.style.transition = '.4s';
+                el.style.opacity = '0';
+
+                setTimeout(() => {
+                    el.remove();
+                }, 400);
+
+            });
+
+        }, 3000);
+
+    </script>
 
 {% endblock %}

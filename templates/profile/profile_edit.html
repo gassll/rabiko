@@ -1,0 +1,86 @@
+{% extends "profile/base_profile.html" %}
+
+{% block profile_content %}
+
+    <style>
+        .page-title {
+            margin-bottom: 25px;
+            color: #3f332b;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .profile-form {
+            max-width: 700px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #3f332b;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d9c5b4;
+            border-radius: 12px;
+            box-sizing: border-box;
+            transition: .2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6b4f3a;
+        }
+
+        .save-btn {
+            background: #6b4f3a;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .save-btn:hover {
+            background: #5a4331;
+        }
+    </style>
+
+    <h1 class="page-title">
+        Редактирование профиля
+    </h1>
+
+    <p style="color:#777; margin-bottom:30px;">
+        Обновите данные своего аккаунта.
+    </p>
+
+    <form method="post" class="profile-form">
+
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Имя пользователя</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            {{ form.email }}
+        </div>
+
+        <button class="save-btn">
+            Сохранить изменения
+        </button>
+
+    </form>
+
+{% endblock %}
