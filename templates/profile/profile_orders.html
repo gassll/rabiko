@@ -15,52 +15,84 @@
             width: 100%;
             border-collapse: collapse;
             background: #fff;
-            border: 1px solid #e6ddd5;
+            border: 1px solid #e4d6c8;
             border-radius: 16px;
             overflow: hidden;
         }
 
         .orders-table th {
+        {#background: #f7f1eb;#} color: #6b4f3a;
+            font-weight: 700;
+            padding: 18px;
+            font-size: 15px;
+        }
+
+        .orders-table thead {
             background: #f7f1eb;
-            color: #6b4f3a;
-            font-weight: 600;
-            text-align: left;
-            padding: 16px;
         }
 
         .orders-table td {
-            padding: 16px;
+            padding: 20px 18px;
             border-bottom: 1px solid #f1ebe6;
+            font-size: 15px;
+        }
+
+        .orders-table tr:hover {
+            background: #fcfaf8;
         }
 
         .orders-table tr:last-child td {
             border-bottom: none;
         }
 
+        .orders-table th:last-child,
+        .orders-table td:last-child {
+            width: 160px;
+            text-align: center;
+        }
+
         .order-link {
-            color: #6b4f3a;
-            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            height: 42px;
+            padding: 0 16px;
+
+            background: #6b4f3a;
+            color: white;
+
+            border-radius: 10px;
             text-decoration: none;
+            font-weight: 600;
         }
 
         .order-link:hover {
-            text-decoration: underline;
+            background: #4f3929;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         .empty-orders {
             padding: 40px;
             text-align: center;
             background: #f7f1eb;
+            border: 1px solid #e4d6c8;
             border-radius: 16px;
             color: #6b4f3a;
         }
 
         .status {
             display: inline-block;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 20px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .status-new {
@@ -83,6 +115,28 @@
             color: #2e7d32;
         }
 
+        .status-cancel {
+            background: #ffe5e5;
+            color: #c0392b;
+        }
+
+        .cancel-btn {
+            height: 42px;
+            padding: 0 14px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #c0392b;
+            color: white;
+
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .cancel-btn:hover {
+            background: #a93226;
+        }
     </style>
 
     <h1 class="page-title">
@@ -120,13 +174,18 @@
         {{ order.get_status_display }}
     </span>
 
-                        {% elif order.status == 'paid' %}
+                        {% elif order.status == 'delivery' %}
+                            <span class="status status-sent">
+        {{ order.get_status_display }}
+    </span>
+
+                        {% elif order.status == 'processing' %}
                             <span class="status status-paid">
         {{ order.get_status_display }}
     </span>
 
-                        {% elif order.status == 'sent' %}
-                            <span class="status status-sent">
+                        {% elif order.status == 'cancelled' %}
+                            <span class="status status-cancel">
         {{ order.get_status_display }}
     </span>
 
@@ -142,14 +201,21 @@
                     </td>
 
                     <td>
-                        <a href=""
-                           class="order-link">
-                            Подробнее
-                        </a>
+                        <div class="order-actions">
+                            <a href="{% url 'order_detail' order.id %}" class="order-link">
+                                Подробнее
+                            </a>
 
-{#                        <a href="{% url 'order_detail' order.id %}" class="order-link">#}
-                        {#    Подробнее#}
-                        {#</a>#}
+                            {% if order.status == 'new' or order.status == 'processing' %}
+                                <form method="post"
+                                      action="{% url 'cancel_order' order.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="cancel-btn">
+                                        Отменить
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
 

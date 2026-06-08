@@ -1,37 +1,129 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-
-from .models import Product, ProductVariant
+from reviews.models import Review
+from .models import Product, ProductVariant, Category, Favorite
+from django.contrib import messages
+from django.contrib.postgres.search import TrigramSimilarity
+from django.db.models import Q
 
 
 # ГЛАВНАЯ
 def home(request):
-    return render(request, "index.html")
+    reviews = Review.objects.all()[:6]  # если есть
+
+    recommended = Product.objects.order_by("?")[:3]
+
+    return render(request, "index.html", {
+        "reviews": reviews,
+        "recommended": recommended
+    })
 
 
 # КАТАЛОГ
 def catalog_view(request):
-    products = Product.objects.all()
+    favorites = []
 
-    query = request.GET.get("q")
+    if request.user.is_authenticated:
+        favorites = list(
+            Favorite.objects.filter(
+                user=request.user
+            ).values_list(
+                "product_id",
+                flat=True
+            )
+        )
+
+    products = Product.objects.filter(
+        is_available=True
+    )
+
+    query = request.GET.get("q", "").strip()
+
     if query:
-        products = products.filter(name__icontains=query)
+        products = (
+            products
+            .annotate(
+                similarity=TrigramSimilarity("name", query)
+            )
+            .filter(
+                Q(name__icontains=query) |
+                Q(similarity__gt=0.1)
+            )
+            .order_by("-similarity")
+        )
 
-    return render(request, "catalog/catalog.html", {
-        "products": products,
-        "query": query
-    })
+    category_slug = request.GET.get("category")
+
+    if category_slug:
+        products = products.filter(
+            category__slug=category_slug
+        )
+
+    min_price = request.GET.get("min_price")
+    max_price = request.GET.get("max_price")
+
+    if min_price:
+        products = products.filter(
+            price__gte=min_price
+        )
+
+    if max_price:
+        products = products.filter(
+            price__lte=max_price
+        )
+
+    categories = Category.objects.all()
 
 
-# 📄 ТОВАР
+    cart = request.session.get("cart", {})
+
+    for product in products:
+        qty = 0
+
+        for variant in product.variants.all():
+            qty += cart.get(str(variant.id), 0)
+
+        product.cart_qty = qty
+
+    return render(
+        request,
+        "catalog/catalog.html",
+        {
+            "products": products,
+            "categories": categories,
+            "favorites": favorites,
+
+            "selected_category": category_slug,
+            "min_price": min_price,
+            "max_price": max_price,
+        }
+    )
+
+
+# ТОВАР
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    variants = ProductVariant.objects.filter(product=product)
 
-    return render(request, "catalog/product_detail.html", {
-        "product": product,
-        "variants": variants
-    })
+    variants = product.variants.all()
+
+    related_products = Product.objects.filter(
+        category=product.category
+    ).exclude(
+        id=product.id
+    )[:4]
+
+    back_url = request.META.get("HTTP_REFERER")
+
+    return render(
+        request,
+        "catalog/product_detail.html",
+        {
+            "product": product,
+            "variants": variants,
+            "related_products": related_products,
+            "back_url": back_url,
+        }
+    )
 
 
 # ABOUT
@@ -70,6 +162,30 @@ def profile_settings(request):
     return render(request, "profile/profile_edit.html")
 
 
-@login_required(login_url='login')
-def favorites_view(request):
-    return render(request, "favorites.html")
+def reviews_view(request):
+    if request.method == "POST":
+        Review.objects.create(
+            name=request.POST.get("name"),
+            text=request.POST.get("text"),
+            rating=request.POST.get("rating", 5),
+            is_published=False
+        )
+
+        messages.success(
+            request,
+            "Спасибо! Ваш отзыв отправлен на модерацию "
+        )
+
+        return redirect("reviews")
+
+    reviews = Review.objects.filter(
+        is_published=True
+    ).order_by("-created_at")
+
+    return render(
+        request,
+        "reviews.html",
+        {
+            "reviews": reviews
+        }
+    )

@@ -2,388 +2,678 @@
 {% load static %}
 
 {% block title %}
-Rabiko
+    Rabiko
 {% endblock %}
 
 {% block content %}
 
-<style>
-/* HERO */
-.hero {
-    margin-top: 30px;
+    <style>
+        /* HERO */
+        .hero {
+            margin-top: 30px;
 
-    background: linear-gradient(
-        135deg,
-        #efe6da,
-        #f7f3ee
-    );
+            background: linear-gradient(
+                    135deg,
+                    #efe6da,
+                    #f7f3ee
+            );
 
-    border-radius: 28px;
+            border-radius: 28px;
 
-    padding: 70px 60px;
+            padding: 70px 60px;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
 
-    overflow: hidden;
-}
+            overflow: hidden;
+        }
 
-.hero-content {
-    max-width: 550px;
-}
+        .hero-content {
+            max-width: 550px;
+        }
 
-.hero-title {
-    font-size: 58px;
-    line-height: 1.1;
-    font-weight: 700;
+        .hero-title {
+            font-size: 58px;
+            line-height: 1.1;
+            font-weight: 700;
 
-    color: #3a2f2a;
+            color: #3a2f2a;
 
-    margin-bottom: 25px;
-}
+            margin-bottom: 25px;
+        }
 
-.hero-text {
-    font-size: 18px;
-    line-height: 1.7;
+        .hero-text {
+            font-size: 18px;
+            line-height: 1.7;
 
-    color: #6b5b4f;
+            color: #6b5b4f;
 
-    margin-bottom: 35px;
-}
+            margin-bottom: 35px;
+        }
 
-.hero-buttons {
-    display: flex;
-    gap: 15px;
-}
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
 
-.hero-btn {
-    padding: 16px 28px;
+        .hero-btn {
+            padding: 16px 28px;
 
-    border-radius: 14px;
+            border-radius: 14px;
 
-    text-decoration: none;
+            text-decoration: none;
 
-    font-size: 17px;
-    font-weight: 600;
+            font-size: 17px;
+            font-weight: 600;
 
-    transition:
-    background 0.2s,
-    transform 0.2s,
-    box-shadow 0.2s;
-}
+            transition: background 0.2s,
+            transform 0.2s,
+            box-shadow 0.2s;
+        }
 
-/* main button */
-.hero-btn-primary {
-    background: #3a2f2a;
-    color: white;
+        /* main button */
+        .hero-btn-primary {
+            background: #3a2f2a;
+            color: white;
 
-    box-shadow: 0 10px 25px rgba(58, 47, 42, 0.15);
-}
+            box-shadow: 0 10px 25px rgba(58, 47, 42, 0.15);
+        }
 
-.hero-btn-primary:hover {
-    background: #241d19;
+        .hero-btn-primary:hover {
+            background: #241d19;
 
-    transform: translateY(-3px);
+            transform: translateY(-3px);
 
-    box-shadow: 0 16px 35px rgba(58, 47, 42, 0.25);
-}
+            box-shadow: 0 16px 35px rgba(58, 47, 42, 0.25);
+        }
 
-/* second button */
-.hero-btn-secondary {
-    background: transparent;
+        /* second button */
+        .hero-btn-secondary {
+            background: transparent;
 
-    color: #3a2f2a;
+            color: #3a2f2a;
 
-    border: 2px solid #3a2f2a;
-}
+            border: 2px solid #3a2f2a;
+        }
 
-.hero-btn-secondary:hover {
-    background: #3a2f2a;
-    color: white;
+        .hero-btn-secondary:hover {
+            background: #3a2f2a;
+            color: white;
 
-    transform: translateY(-3px);
+            transform: translateY(-3px);
 
-    box-shadow: 0 16px 35px rgba(58, 47, 42, 0.20);
-}
+            box-shadow: 0 16px 35px rgba(58, 47, 42, 0.20);
+        }
 
-/* images */
-.hero-images {
-    display: flex;
-    gap: 20px;
+        /* images */
+        .hero-images {
+            display: flex;
+            gap: 20px;
 
-    flex-shrink: 0;
-}
+            flex-shrink: 0;
+        }
 
-.hero-images img {
-    width: 260px;
-    height: 420px;
+        .hero-images img {
+            width: 260px;
+            height: 420px;
 
-    object-fit: cover;
+            object-fit: cover;
 
-    border-radius: 24px;
+            border-radius: 24px;
 
-    transition: 0.3s;
-}
+            transition: 0.3s;
+        }
 
-.hero-images img:hover {
-    transform: translateY(-5px);
-}
+        .hero-images img:hover {
+            transform: translateY(-5px);
+        }
 
-/* FEATURES */
-.features {
-    margin-top: 60px;
+        /* FEATURES */
+        .features {
+            margin-top: 60px;
 
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
-    gap: 25px;
-}
+            gap: 25px;
+        }
 
-.feature-card {
-    background: #efe6da;
+        .feature-card {
+            background: #efe6da;
 
-    border-radius: 20px;
+            border-radius: 20px;
 
-    padding: 35px 30px;
-}
+            padding: 35px 30px;
+        }
 
-.feature-title {
-    font-size: 24px;
-    font-weight: 700;
+        .feature-title {
+            font-size: 24px;
+            font-weight: 700;
 
-    color: #3a2f2a;
+            color: #3a2f2a;
 
-    margin-bottom: 15px;
-}
+            margin-bottom: 15px;
+        }
 
-.feature-text {
-    color: #6b5b4f;
-    line-height: 1.7;
-}
+        .feature-text {
+            color: #6b5b4f;
+            line-height: 1.7;
+        }
 
-/* ABOUT */
-.home-about {
-    margin-top: 70px;
+        /* ABOUT */
 
-    background: #efe6da;
 
-    border-radius: 28px;
+        .home-about {
+            margin-top: 70px;
 
-    padding: 60px;
-}
+            background: #efe6da;
 
-.home-about-title {
-    font-size: 42px;
-    font-weight: 700;
+            border-radius: 28px;
 
-    color: #3a2f2a;
+            padding: 60px;
+        }
 
-    margin-bottom: 20px;
-}
+        .home-about-title {
+            font-size: 42px;
+            font-weight: 700;
 
-.home-about-text {
-    max-width: 800px;
+            color: #3a2f2a;
 
-    color: #6b5b4f;
+            margin-bottom: 20px;
+        }
 
-    font-size: 18px;
-    line-height: 1.8;
-}
+        .home-about-text {
+            max-width: 800px;
 
-/* CTA */
-.cta {
-    margin: 70px 0;
+            color: #6b5b4f;
 
-    background: linear-gradient(
-        135deg,
-        #3a2f2a,
-        #5a4a42
-    );
+            font-size: 18px;
+            line-height: 1.8;
+        }
 
-    border-radius: 28px;
+        /* CTA */
+        .cta {
+            margin: 70px 0;
 
-    padding: 70px 50px;
+            background: linear-gradient(
+                    135deg,
+                    #3a2f2a,
+                    #5a4a42
+            );
 
-    text-align: center;
-}
+            border-radius: 28px;
 
-.cta-title {
-    color: white;
+            padding: 70px 50px;
 
-    font-size: 44px;
-    font-weight: 700;
+            text-align: center;
+        }
 
-    margin-bottom: 20px;
-}
+        .cta-title {
+            color: white;
 
-.cta-text {
-    color: #e9ddd0;
+            font-size: 44px;
+            font-weight: 700;
 
-    font-size: 18px;
-    line-height: 1.7;
+            margin-bottom: 20px;
+        }
 
-    max-width: 700px;
-    margin: 0 auto 35px;
-}
+        .cta-text {
+            color: #e9ddd0;
 
-.cta-btn {
-    display: inline-block;
+            font-size: 18px;
+            line-height: 1.7;
 
-    background: white;
-    color: #3a2f2a;
+            max-width: 700px;
+            margin: 0 auto 35px;
+        }
 
-    padding: 16px 34px;
+        .cta-btn {
+            display: inline-block;
 
-    border-radius: 14px;
+            background: white;
+            color: #3a2f2a;
 
-    text-decoration: none;
+            padding: 16px 34px;
 
-    font-size: 17px;
-    font-weight: 700;
+            border-radius: 14px;
 
-    transition: 0.2s;
-}
+            text-decoration: none;
 
-.cta-btn:hover {
-    background: #f3e9dc;
-}
-</style>
+            font-size: 17px;
+            font-weight: 700;
 
-<!-- HERO -->
-<section class="hero">
+            transition: 0.2s;
+        }
 
-    <div class="hero-content">
+        .cta-btn:hover {
+            background: #f3e9dc;
+        }
 
-        <div class="hero-title">
-            Одежда для малышей
-            с любовью и заботой
+        /* REVIEWS */
+
+        .reviews {
+            margin-top: 70px;
+        }
+
+        .reviews-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 30px;
+        }
+
+        .reviews-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .reviews-grid {
+            flex: 1;
+
+            display: grid;
+            grid-template-columns:repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .review-card {
+            background: #efe6da;
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .review-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 10px;
+        }
+
+        .review-stars {
+            color: #c68b3c;
+            margin-bottom: 15px;
+        }
+
+        .review-text {
+            color: #6b5b4f;
+            line-height: 1.7;
+        }
+
+        .reviews-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .reviews-header h2 {
+            margin: 0;
+            color: #3a2f2a;
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .reviews-arrow {
+            width: 60px;
+            height: 60px;
+
+            min-width: 60px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #3a2f2a;
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 30px;
+            font-weight: 700;
+
+            transition: .2s;
+        }
+
+        .reviews-arrow:hover {
+            background: #241d19;
+            transform: translateX(4px);
+        }
+
+        .recommended {
+            margin-top: 60px;
+        }
+
+        .recommended-header h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 25px;
+        }
+
+        /* wrapper: cards + arrow */
+        .recommended-wrapper {
+            display: flex;
+            align-items: stretch;
+            gap: 25px;
+        }
+
+        /* grid of cards */
+        .recommended-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 25px;
+        }
+
+        /* card (как у тебя в каталоге) */
+        .product-card {
+            width: 100%;
+            background: #fff;
+            border: 1px solid #ece6df;
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* image */
+        .product-image {
+            height: 320px;
+            background: #f7f1eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* content */
+        .product-content {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 10px;
+        }
+
+        .product-desc {
+            font-size: 14px;
+            color: #8d7b70;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 15px;
+        }
+
+        /* button */
+        .product-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 52px;
+            background: #6b4f3a;
+            color: white;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* arrow container */
+        .recommended-arrow {
+            width: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* arrow button */
+        .arrow-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #3a2f2a;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 30px;
+            transition: .2s;
+        }
+
+        .arrow-btn:hover {
+            background: #241d19;
+            transform: translateX(4px);
+        }
+
+
+        @media (max-width: 1400px) {
+            .recommended-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .recommended-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .recommended-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .recommended-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="hero-title">
+                Одежда для малышей
+                с любовью и заботой
+            </div>
+
+            <div class="hero-text">
+
+                Rabiko — бренд одежды для новорожденных,
+                созданный для комфорта, уюта и счастливых
+                моментов с первых дней жизни.
+
+            </div>
+
+            <div class="hero-buttons">
+
+                <a href="/catalog/"
+                   class="hero-btn hero-btn-primary">
+
+                    Перейти в каталог
+
+                </a>
+
+                <a href="/about/"
+                   class="hero-btn hero-btn-secondary">
+
+                    О бренде
+
+                </a>
+
+            </div>
+
         </div>
 
-        <div class="hero-text">
+        <div class="hero-images">
 
-            Rabiko — бренд одежды для новорожденных,
-            созданный для комфорта, уюта и счастливых
-            моментов с первых дней жизни.
+            <img src="{% static 'images/index.png' %}"
+                 alt="Rabiko">
+
+            <img src="{% static 'images/index2.jpg' %}"
+                 alt="Rabiko">
 
         </div>
 
-        <div class="hero-buttons">
+    </section>
+    <!-- RECOMMENDED -->
+    <section class="recommended">
 
-            <a href="/catalog/"
-               class="hero-btn hero-btn-primary">
+        <div class="recommended-header">
+            <h2>Рекомендуем</h2>
+        </div>
 
-                Перейти в каталог
+        <div class="recommended-wrapper">
 
+            <div class="recommended-grid">
+
+                {% for product in recommended|slice:":5" %}
+
+                    <div class="product-card">
+
+                        <div class="product-image">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% endif %}
+                        </div>
+
+                        <div class="product-content">
+
+                            <div class="product-name">
+                                {{ product.name }}
+                            </div>
+
+                            <div class="product-desc">
+                                {{ product.description|truncatechars:80 }}
+                            </div>
+
+                            <div class="product-price">
+                                {{ product.price }} ₽
+                            </div>
+
+                            <a href="{% url 'product_detail' product.id %}" class="product-btn">
+                                Смотреть
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- arrow -->
+            <div class="recommended-arrow">
+                <a href="/catalog/" class="arrow-btn">→</a>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ABOUT -->
+    <section class="home-about">
+
+        <div class="home-about-title">
+            О бренде Rabiko
+        </div>
+
+        <div class="home-about-text">
+
+            Мы создаём одежду для новорожденных,
+            объединяя стиль, комфорт и качество.
+
+            Каждая вещь создаётся с вниманием
+            к деталям, чтобы дарить уют
+            и заботу малышам каждый день.
+
+        </div>
+
+    </section>
+
+    <section class="reviews-preview">
+
+        <h2 class="reviews-title">
+            Отзывы
+        </h2>
+
+        <div class="reviews-wrapper">
+
+            <div class="reviews-grid">
+
+                {% for review in reviews %}
+
+                    <div class="review-card">
+
+                        <div class="review-name">
+                            {{ review.name }}
+                        </div>
+
+                        <div class="review-stars">
+                            ⭐⭐⭐⭐⭐
+                        </div>
+
+                        <div class="review-text">
+                            {{ review.text }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <a href="{% url 'reviews' %}" class="reviews-arrow">
+                →
             </a>
 
-            <a href="/about/"
-               class="hero-btn hero-btn-secondary">
-
-                О бренде
-
-            </a>
-
         </div>
 
-    </div>
+    </section>
 
-    <div class="hero-images">
+    <!-- CTA -->
+    <section class="cta">
 
-    <img src="{% static 'media/images/index.png' %}"
-         alt="Rabiko">
-
-    <img src="{% static 'media/images/index2.jpg' %}"
-         alt="Rabiko">
-
-</div>
-
-</section>
-
-<!-- FEATURES -->
-<section class="features">
-
-    <div class="feature-card">
-
-        <div class="feature-title">
-            Комфорт
+        <div class="cta-title">
+            Коллекция Rabiko
         </div>
 
-        <div class="feature-text">
-            Мягкие ткани и удобный крой
+        <div class="cta-text">
+
+            Откройте для себя мягкую,
+            стильную и удобную одежду
             для самых маленьких.
+
         </div>
 
-    </div>
+        <a href="/catalog/" class="cta-btn">
+            Смотреть каталог
+        </a>
 
-    <div class="feature-card">
-
-        <div class="feature-title">
-            Качество
-        </div>
-
-        <div class="feature-text">
-            Используем безопасные материалы
-            и качественное производство.
-        </div>
-
-    </div>
-
-    <div class="feature-card">
-
-        <div class="feature-title">
-            Стиль
-        </div>
-
-        <div class="feature-text">
-            Минималистичный дизайн,
-            вдохновлённый теплом семьи.
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ABOUT -->
-<section class="home-about">
-
-    <div class="home-about-title">
-        О бренде Rabiko
-    </div>
-
-    <div class="home-about-text">
-
-        Мы создаём одежду для новорожденных,
-        объединяя стиль, комфорт и качество.
-
-        Каждая вещь создаётся с вниманием
-        к деталям, чтобы дарить уют
-        и заботу малышам каждый день.
-
-    </div>
-
-</section>
-
-<!-- CTA -->
-<section class="cta">
-
-    <div class="cta-title">
-        Коллекция Rabiko
-    </div>
-
-    <div class="cta-text">
-
-        Откройте для себя мягкую,
-        стильную и удобную одежду
-        для самых маленьких.
-
-    </div>
-
-    <a href="/catalog/" class="cta-btn">
-        Смотреть каталог
-    </a>
-
-</section>
+    </section>
 
 {% endblock %}

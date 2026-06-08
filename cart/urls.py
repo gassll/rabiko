@@ -4,11 +4,33 @@ from .views import (
     add_to_cart,
     remove_from_cart,
     clear_cart,
+    decrease_quantity,
 )
 
 urlpatterns = [
     path("", cart_detail, name="cart_detail"),
-    path("add/<int:variant_id>/", add_to_cart, name="add_to_cart"),
-    path("remove/<int:variant_id>/", remove_from_cart, name="remove_from_cart"),
-    path("clear/", clear_cart, name="clear_cart"),
+
+    path(
+        "add/<int:variant_id>/",
+        add_to_cart,
+        name="add_to_cart"
+    ),
+
+    path(
+        "remove/<int:variant_id>/",
+        remove_from_cart,
+        name="remove_from_cart"
+    ),
+
+    path(
+        "decrease/<int:variant_id>/",
+        decrease_quantity,
+        name="decrease_quantity"
+    ),
+
+    path(
+        "clear/",
+        clear_cart,
+        name="clear_cart"
+    ),
 ]

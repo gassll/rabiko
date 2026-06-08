@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Отзывы | Rabiko
+{% endblock %}
+
+{% block content %}
+
+    <style>
+
+        .reviews-page {
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .page-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 15px;
+        }
+
+        .page-subtitle {
+            color: #6b5b4f;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .review-form {
+            background: #efe6da;
+            padding: 35px;
+            border-radius: 24px;
+            margin-bottom: 50px;
+        }
+
+        .review-form h2 {
+            color: #3a2f2a;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #3a2f2a;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d9c8b8;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d9c8b8;
+            border-radius: 12px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .submit-btn {
+            background: #3a2f2a;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .submit-btn:hover {
+            background: #241d19;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns:repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .review-card {
+            background: #efe6da;
+            border-radius: 20px;
+            padding: 25px;
+        }
+
+        .review-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 10px;
+        }
+
+        .review-stars {
+            margin-bottom: 15px;
+            color: #c68b3c;
+        }
+
+        .review-text {
+            color: #6b5b4f;
+            line-height: 1.7;
+        }
+
+        .empty {
+            background: #efe6da;
+            padding: 40px;
+            text-align: center;
+            border-radius: 20px;
+            color: #6b5b4f;
+        }
+
+        .success-message {
+            background: #e8f7ed;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 900px) {
+
+            .reviews-grid {
+                grid-template-columns:1fr;
+            }
+
+        }
+
+    </style>
+
+    <div class="reviews-page">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="success-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <h1 class="page-title">
+            Отзывы
+        </h1>
+
+        <p class="page-subtitle">
+            Делимся впечатлениями о продукции Rabiko
+        </p>
+
+        <!-- ФОРМА -->
+
+        <div class="review-form">
+
+            <h2>
+                Оставить отзыв
+            </h2>
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Ваше имя</label>
+                    <input type="text" name="name">
+                </div>
+
+                <div class="form-group">
+                    <label>Оценка</label>
+
+                    <select name="rating">
+
+                        <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                        <option value="4">⭐⭐⭐⭐ (4)</option>
+                        <option value="3">⭐⭐⭐ (3)</option>
+                        <option value="2">⭐⭐ (2)</option>
+                        <option value="1">⭐ (1)</option>
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Ваш отзыв</label>
+                    <textarea name="text"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Отправить отзыв
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- СПИСОК ОТЗЫВОВ -->
+
+        {% if reviews %}
+
+            <div class="reviews-grid">
+
+                {% for review in reviews %}
+
+                    <div class="review-card">
+
+                        <div class="review-name">
+                            {{ review.name }}
+                        </div>
+
+                        <div class="review-stars">
+
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    ⭐
+                                {% endif %}
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="review-text">
+                            {{ review.text }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+                Пока нет отзывов
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% endblock %}

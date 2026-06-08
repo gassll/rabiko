@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from orders.models import Order
+from catalog.models import Favorite
 
 from .forms import LoginForm, ProfileUpdateForm
 from users.forms import RegisterForm
@@ -39,16 +41,41 @@ def login_view(request):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
 
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(
+                request,
+                username=username,
+                password=password
+            )
 
             if user:
                 login(request, user)
+
+                favorite_id = request.GET.get("favorite")
+
+                if favorite_id:
+                    from catalog.models import Product, Favorite
+
+                    product = Product.objects.get(id=favorite_id)
+
+                    Favorite.objects.get_or_create(
+                        user=user,
+                        product=product
+                    )
+
+                next_url = request.POST.get("next")
+
+                if next_url:
+                    return redirect(next_url)
+
                 return redirect("profile")
 
             form.add_error(None, "Неверный логин или пароль")
 
-    return render(request, "registration/login.html", {"form": form})
-
+    return render(
+        request,
+        "registration/login.html",
+        {"form": form}
+    )
 
 def logout_view(request):
     logout(request)
@@ -58,27 +85,52 @@ def logout_view(request):
 # PROFILE OVERVIEW
 @login_required
 def profile_view(request):
-    return render(request, "profile/profile.html", {
-        "orders_count": 0,
-        "favorites_count": 0,
-        "cart_count": 0,
-        "last_orders": [],
-    })
 
+    orders = Order.objects.filter(
+        user=request.user
+    ).order_by("-created_at")
+
+    favorites_count = Favorite.objects.filter(
+        user=request.user
+    ).count()
+
+    cart_count = len(
+        request.session.get("cart", {})
+    )
+
+    return render(
+        request,
+        "profile/profile.html",
+        {
+            "orders_count": orders.count(),
+            "favorites_count": favorites_count,
+            "cart_count": cart_count,
+            "last_orders": orders[:5],
+        }
+    )
 
 @login_required
 def profile_orders(request):
-    return render(request, "profile/profile_orders.html", {
-        "active": "orders"
-    })
+    orders = Order.objects.filter(
+        user=request.user
+    ).order_by("-created_at")
+
+    return render(
+        request,
+        "profile/profile_orders.html",
+        {
+            "orders": orders
+        }
+    )
 
 
 @login_required
 def profile_favorites(request):
-    return render(request, "profile/profile_favorites.html", {
-        "active": "favorites"
-    })
+    favorites = Favorite.objects.filter(user=request.user)
 
+    return render(request, "profile/profile_favorites.html", {
+        "favorites": favorites
+    })
 
 @login_required
 def profile_edit(request):

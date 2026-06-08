@@ -2,6 +2,35 @@
 
 {% block profile_content %}
     <style>
+        .product-card {
+            position: relative;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: white;
+            border-radius: 50%;
+            font-size: 22px;
+
+            color: #6b4f3a;
+            text-decoration: none;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+        }
+
+        .favorite-btn.active {
+            color: red;
+        }
 
         .page-title {
             font-size: 28px;
@@ -84,6 +113,10 @@
             {% for item in favorites %}
 
                 <div class="product-card">
+                    <a href="{% url 'toggle_favorite' item.product.id %}"
+                       class="favorite-btn active">
+                        ♥
+                    </a>
 
                     <img src="{{ item.product.image.url }}"
                          alt="{{ item.product.name }}">

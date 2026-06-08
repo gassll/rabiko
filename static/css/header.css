@@ -1,9 +1,11 @@
 .header {
     background: #efe6da;
     padding: 15px 20px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     border-radius: 10px;
 }
 
@@ -21,21 +23,42 @@
 
 /* links */
 .nav a {
+    position: relative;
+
     color: #3a2f2a;
     text-decoration: none;
 
     font-size: 18px;
     font-weight: 600;
 
-    padding: 10px 14px;
-    border-radius: 10px;
+    padding: 10px 0;
 
     transition: 0.2s;
 }
 
-.nav a:hover {
-    color: #a07c5a;
-    background: #f3e9dc;
+/* underline линия */
+.nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 0%;
+    height: 2px;
+
+    background: #a07c5a;
+
+    transition: 0.3s ease;
+}
+
+/* hover линия */
+.nav a:hover::after {
+    width: 100%;
+}
+
+/* АКТИВНАЯ СТРАНИЦА */
+.nav a.active::after {
+    width: 100%;
 }
 
 /* icons */
@@ -57,18 +80,27 @@
     height: 56px;
 
     border-radius: 12px;
-    transition: 0.2s;
+
+    transition: background 0.2s ease;
 }
 
+/* hover фон */
 .icon:hover {
     background: #f3e9dc;
 }
 
-/* BIG ICONS */
+/* icon image */
 .icon img {
     width: 34px;
     height: 34px;
     object-fit: contain;
+
+    transition: transform 0.2s ease;
+}
+
+/* zoom */
+.icon:hover img {
+    transform: scale(1.15);
 }
 
 /* badge */
@@ -86,8 +118,11 @@
     padding: 3px 7px;
     border-radius: 20px;
 }
-/* search */
-.search-form {
+
+/* SEARCH */
+.header-search {
+    position: relative;
+
     display: flex;
     align-items: center;
 
@@ -100,7 +135,8 @@
     width: 320px;
 }
 
-.search-form input {
+/* input */
+.header-search input {
     border: none;
     outline: none;
 
@@ -113,7 +149,33 @@
     background: transparent;
 }
 
-.search-form button {
+/* крестик */
+.clear-search {
+    position: absolute;
+    right: 52px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 28px;
+    height: 28px;
+
+    border: none;
+    background: transparent;
+
+    font-size: 18px;
+    color: #6b4f3a;
+
+    cursor: pointer;
+
+    display: none;
+}
+
+.clear-search:hover {
+    color: #3a2f2a;
+}
+
+/* search button */
+.header-search button {
     border: none;
     background: transparent;
 
@@ -127,7 +189,43 @@
     justify-content: center;
 }
 
-.search-form button img {
+.header-search button img {
     width: 22px;
     height: 22px;
+}
+
+.messages-wrapper {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.message {
+    min-width: 320px;
+
+    background: #6b4f3a;
+    color: white;
+
+    padding: 16px 24px;
+
+    border-radius: 16px;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,.15);
+
+    animation: showMessage .3s ease;
+}
+
+@keyframes showMessage {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }

@@ -11,15 +11,9 @@ urlpatterns = [
     # товар
     path('product/<int:pk>/', views.product_detail, name='product_detail'),
 
-    # ℹabout
+    # about
     path('about/', views.about_view, name='about'),
 
     # профиль
-    path('profile/', views.profile, name='profile'),
-    path('profile/favorites/', views.profile_favorites, name='profile_favorites'),
-    path('profile/orders/', views.profile_orders, name='profile_orders'),
-    path('profile/settings/', views.profile_settings, name='profile_settings'),
-
-    # избранное
-    path("favorites/", views.favorites_view, name="favorites"),
+    path("reviews/", views.reviews_view, name="reviews")
 ]

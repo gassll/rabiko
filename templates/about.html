@@ -132,13 +132,13 @@
             transform: translateY(-2px);
         }
     </style>
-    {% if request.path != "/" %}
-
-        <a href="/" class="back-btn">
-            ← Вернуться на главную
-        </a>
-
-    {% endif %}
+{#    {% if request.path != "/" %}#}
+{##}
+{#        <a href="/" class="back-btn">#}
+{#            ← Вернуться на главную#}
+{#        </a>#}
+{##}
+{#    {% endif %}#}
 
     <section class="about-page">
 
@@ -170,7 +170,7 @@
             <!-- IMAGE -->
             <div class="about-image">
 
-                <img src="{% static 'media/images/about.webp' %}"
+                <img src="{% static 'images/about.webp' %}"
                      alt="Rabiko">
 
             </div>

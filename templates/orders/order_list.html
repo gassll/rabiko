@@ -1,36 +1,181 @@
-{% extends "registration/../base.html" %}
+{% extends "base.html" %}
 
 {% block title %}
-Мои заказы
+    Мои заказы
 {% endblock %}
 
 {% block content %}
 
-<h1> Мои заказы</h1>
+    <style>
 
-{% if orders %}
+        .orders-page {
+            max-width: 1100px;
+            margin: 40px auto;
+        }
 
-    {% for order in orders %}
-        <div style="background:#efe6da; padding:15px; margin-bottom:10px; border-radius:10px;">
+        .orders-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 30px;
+        }
 
-            <h3>Заказ #{{ order.id }}</h3>
+        .order-card {
+            background: #f7f1eb;
+            border: 1px solid #e4d6c8;
+            border-radius: 24px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            transition: .2s;
+        }
 
-            <p>Статус: {{ order.status }}</p>
-            <p>Сумма: {{ order.total_price }} ₽</p>
-            <p>Дата: {{ order.created_at }}</p>
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(107, 79, 58, .12);
+        }
 
-            <a href="{% url 'order_detail' order.id %}"
-               style="display:inline-block; margin-top:10px; padding:8px 12px; background:#a07c5a; color:white; border-radius:6px;">
-                Подробнее
-            </a>
+        .order-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 20px;
+        }
 
-        </div>
-    {% endfor %}
+        .order-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
 
-{% else %}
+        .order-item {
+            min-width: 180px;
+        }
 
-    <p>У вас пока нет заказов</p>
+        .order-label {
+            font-size: 14px;
+            color: #8d7b70;
+            margin-bottom: 6px;
+        }
 
-{% endif %}
+        .order-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #3a2f2a;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #d9c5b4;
+            color: #6b4f3a;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .order-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            height: 50px;
+            padding: 0 20px;
+
+            background: #6b4f3a;
+            color: white;
+
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+
+            transition: .2s;
+        }
+
+        .order-btn:hover {
+            background: #4f3929;
+        }
+
+        .empty-orders {
+            background: #f7f1eb;
+            border: 1px solid #e4d6c8;
+            border-radius: 24px;
+            padding: 50px;
+            text-align: center;
+            color: #6b4f3a;
+            font-size: 20px;
+        }
+
+    </style>
+
+    <div class="orders-page">
+
+        <h1 class="orders-title">
+            Мои заказы
+        </h1>
+
+        {% if orders %}
+
+            {% for order in orders %}
+
+                <div class="order-card">
+
+                    <div class="order-number">
+                        Заказ #{{ order.id }}
+                    </div>
+
+                    <div class="order-info">
+
+                        <div class="order-item">
+                            <div class="order-label">
+                                Статус
+                            </div>
+
+                            <div class="status">
+                                {{ order.get_status_display }}
+                            </div>
+                        </div>
+
+                        <div class="order-item">
+                            <div class="order-label">
+                                Сумма
+                            </div>
+
+                            <div class="order-value">
+                                {{ order.total_price }} ₽
+                            </div>
+                        </div>
+
+                        <div class="order-item">
+                            <div class="order-label">
+                                Дата оформления
+                            </div>
+
+                            <div class="order-value">
+                                {{ order.created_at|date:"d.m.Y H:i" }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <a href="{% url 'order_detail' order.id %}"
+                       class="order-btn">
+                        Подробнее
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-orders">
+                У вас пока нет заказов
+            </div>
+
+        {% endif %}
+
+    </div>
 
 {% endblock %}

@@ -1,13 +1,346 @@
-{% extends "registration/../base.html" %}
+{% extends "base.html" %}
 
 {% block title %}
-Избранное
+    Избранное
 {% endblock %}
 
 {% block content %}
 
-<h1>Избранное</h1>
+    <style>
+        .favorites-page {
+            margin-top: 40px;
+        }
 
-<p>У вас пока нет избранных товаров.</p>
+        .favorites-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
 
+        .products-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .product-card {
+            position: relative;
+            width: 300px;
+
+            background: #fff;
+            border: 1px solid #ece6df;
+            border-radius: 24px;
+
+            overflow: hidden;
+
+            transition: .2s;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(107, 79, 58, .12);
+        }
+
+        .card-link {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .product-image-wrapper {
+            width: 100%;
+            height: 350px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f7f1eb;
+        }
+
+        .product-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-content {
+            padding: 18px;
+
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #3a2f2a;
+
+            margin-bottom: 12px;
+        }
+
+        .product-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #3a2f2a;
+
+            margin-bottom: 15px;
+        }
+
+        .open-btn {
+            margin-top: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 100%;
+            height: 52px;
+
+            background: #6b4f3a;
+            color: white;
+
+            border-radius: 14px;
+
+            text-decoration: none;
+            font-weight: 700;
+
+            transition: .2s;
+        }
+
+        .open-btn:hover {
+            background: #4f3929;
+        }
+
+        .empty {
+            font-size: 18px;
+            color: #777;
+        }
+
+        .cart-area {
+            margin-top: auto;
+        }
+
+        .product-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 52px;
+            background: #6b4f3a;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .product-btn:hover {
+            background: #4f3929;
+            transform: translateY(-2px);
+        }
+
+        .qty-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            width: 100%;
+            height: 52px;
+
+            background: #f7f1eb;
+            border-radius: 14px;
+            padding: 0 12px;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #6b4f3a;
+            color: white;
+
+            font-size: 22px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .qty-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3a2f2a;
+        }
+
+        .heart-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+
+            font-size: 20px;
+            color: #c0392b;
+
+            text-decoration: none;
+
+            z-index: 5;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+
+            transition: .2s;
+        }
+
+        .heart-btn:hover {
+            transform: scale(1.1);
+            background: #fff;
+        }
+    </style>
+
+    <div class="favorites-page">
+
+        <h2 class="favorites-title">
+            Избранное
+        </h2>
+
+        {% if favorites %}
+
+            <div class="products-grid">
+
+                {% for favorite in favorites %}
+
+                    <div class="product-card">
+                        <a href="{% url 'toggle_favorite' favorite.product.id %}"
+                           class="heart-btn"
+                           title="Удалить из избранного">
+                            ♥
+                        </a>
+
+                        <a href="{% url 'product_detail' favorite.product.id %}"
+                           class="card-link"></a>
+
+                        <div class="product-image-wrapper">
+
+                            <img
+                                    src="{{ favorite.product.image.url }}"
+                                    alt="{{ favorite.product.name }}"
+                                    class="product-image">
+
+                        </div>
+
+                        <div class="product-content">
+
+                            <div class="product-name">
+                                {{ favorite.product.name }}
+                            </div>
+
+                            <div class="product-price">
+                                {{ favorite.product.price }} ₽
+                            </div>
+
+                            <div class="cart-area"
+                                 data-id="{{ favorite.product.variants.first.id }}"
+                                 data-qty="{{ favorite.product.cart_qty|default:0 }}">
+
+                                <button class="product-btn add-btn">В корзину</button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+                У вас пока нет избранных товаров.
+            </div>
+
+        {% endif %}
+
+    </div>
+    <script>
+        function updateBadge(count) {
+            document.querySelector(".badge").textContent = count;
+        }
+
+        document.querySelectorAll(".cart-area").forEach(area => {
+
+            const id = area.dataset.id;
+            let qty = parseInt(area.dataset.qty || 0);
+
+            function render() {
+                if (qty === 0) {
+                    area.innerHTML = `
+                <button class="product-btn add-btn">В корзину</button>
+            `;
+
+                    area.querySelector(".add-btn").addEventListener("click", () => {
+                        fetch("/cart/add/" + id + "/")
+                            .then(r => r.json())
+                            .then(data => {
+                                qty = 1;
+                                updateBadge(data.count);
+                                render();
+                            });
+                    });
+
+                } else {
+                    area.innerHTML = `
+                <div class="qty-box">
+                    <button class="qty-btn minus">−</button>
+                    <span class="qty-value">${qty}</span>
+                    <button class="qty-btn plus">+</button>
+                </div>
+            `;
+
+                    area.querySelector(".plus").addEventListener("click", () => {
+                        fetch("/cart/add/" + id + "/")
+                            .then(r => r.json())
+                            .then(data => {
+                                qty++;
+                                updateBadge(data.count);
+                                render();
+                            });
+                    });
+
+                    area.querySelector(".minus").addEventListener("click", () => {
+                        fetch("/cart/decrease/" + id + "/")
+                            .then(r => r.json())
+                            .then(data => {
+                                qty = Math.max(0, qty - 1);
+                                updateBadge(data.count);
+                                render();
+                            });
+                    });
+                }
+            }
+
+            render();
+        });
+    </script>
 {% endblock %}

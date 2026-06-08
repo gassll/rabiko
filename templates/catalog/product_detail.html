@@ -1,0 +1,500 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <style>
+        .back-btn {
+            display: inline-block;
+
+            margin: 10px 0 30px 0;
+            padding: 12px 18px;
+
+            background: #efe6da;
+            border: 2px solid #3a2f2a;
+            border-radius: 12px;
+            align-self: flex-start;
+            width: fit-content;
+
+            color: #3a2f2a;
+            text-decoration: none;
+            font-weight: 600;
+
+            transition: .2s;
+        }
+
+        .back-btn:hover {
+            background: #3a2f2a;
+            color: white;
+
+            transform: translateY(-2px);
+        }
+
+
+        .product-page {
+            display: grid;
+            grid-template-columns: 550px 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .gallery {
+            position: relative;
+        }
+
+        .main-image {
+            width: 100%;
+            border-radius: 24px;
+            display: block;
+            border: 1px solid #eee;
+        }
+
+        .gallery-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            background: rgba(255, 255, 255, .9);
+            font-size: 20px;
+            transition: .2s;
+        }
+
+        .gallery-btn:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        .prev {
+            left: 15px;
+        }
+
+        .next {
+            right: 15px;
+        }
+
+        .product-info {
+            padding-top: 15px;
+        }
+
+        .product-info h1 {
+            font-size: 46px;
+            color: #3a2f2a;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            display: inline-block;
+
+            background: #f7f1eb;
+
+            padding: 14px 22px;
+
+            border-radius: 16px;
+
+            font-size: 42px;
+            font-weight: 700;
+
+            color: #6b4f3a;
+
+            margin-bottom: 30px;
+        }
+
+        .description {
+            color: #555;
+            line-height: 1.8;
+            font-size: 17px;
+            margin-bottom: 35px;
+        }
+
+        .buy-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 100%;
+            max-width: 320px;
+
+            height: 58px;
+
+            border: none;
+            border-radius: 16px;
+
+            background: #6b4f3a;
+            color: white;
+
+            font-size: 17px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .2s;
+
+            box-shadow: 0 8px 20px rgba(107, 79, 58, .18);
+        }
+
+        .buy-btn:hover {
+            background: #4f3929;
+
+            transform: translateY(-3px);
+
+            box-shadow: 0 12px 24px rgba(107, 79, 58, .25);
+        }
+
+        .buy-btn:active {
+            transform: translateY(0);
+        }
+
+        .related-section {
+            margin-top: 90px;
+            margin-bottom: 80px;
+        }
+
+        .related-section h2 {
+            font-size: 32px;
+            color: #3a2f2a;
+            margin-bottom: 30px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .related-card {
+            background: white;
+            border: 1px solid #ececec;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: .2s;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: contain;
+            background: white;
+        }
+
+        .related-content {
+            padding: 16px;
+        }
+
+        .related-content h3 {
+            font-size: 18px;
+            color: #3a2f2a;
+            margin-bottom: 10px;
+        }
+
+        .related-price {
+            font-weight: 700;
+            color: #6b4f3a;
+            margin-bottom: 15px;
+        }
+
+        .related-btn {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: #6b4f3a;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .related-btn:hover {
+            background: #4f3929;
+        }
+
+        select {
+            width: 100%;
+            max-width: 300px;
+
+            padding: 14px;
+
+            border: 1px solid #ddd;
+            border-radius: 12px;
+
+            margin-bottom: 20px;
+
+            font-size: 16px;
+        }
+
+        .qty-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: #f7f1eb;
+
+            width: 100%;
+            max-width: 320px;
+            height: 58px; /* фиксируем размер как у buy-btn */
+
+            padding: 0 14px;
+
+            border-radius: 16px;
+            box-sizing: border-box;
+        }
+
+        .qty-btn {
+            width: 44px;
+            height: 44px;
+
+            border: none;
+            border-radius: 12px;
+
+            background: #6b4f3a;
+            color: white;
+
+            font-size: 26px; /* сделали крупнее */
+            font-weight: 700;
+
+            cursor: pointer;
+            transition: .2s;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: #4f3929;
+        }
+
+        .qty-value {
+            min-width: 40px;
+
+            text-align: center;
+
+            font-size: 24px;
+            font-weight: 800;
+
+            color: #3a2f2a;
+        }
+
+        @media (max-width: 1000px) {
+
+            .product-page {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .related-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-info h1 {
+                font-size: 34px;
+            }
+
+            .price {
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+    {% if back_url and "/favorites/" in back_url %}
+        <a href="{% url 'favorites' %}" class="back-btn">
+            ← Вернуться в избранное
+        </a>
+    {% else %}
+        <a href="{% url 'catalog' %}" class="back-btn">
+            ← Вернуться в каталог
+        </a>
+    {% endif %}
+
+    <div class="product-page">
+
+        <div class="gallery">
+
+            {% if product.images.exists %}
+                <button type="button"
+                        class="gallery-btn prev"
+                        onclick="prevImage()">
+                    ❮
+                </button>
+            {% endif %}
+
+            <img
+                    id="mainImage"
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                    class="main-image">
+
+            {% if product.images.exists %}
+                <button type="button"
+                        class="gallery-btn next"
+                        onclick="nextImage()">
+                    ❯
+                </button>
+            {% endif %}
+
+        </div>
+
+        <div class="product-info">
+
+            <h1>{{ product.name }}</h1>
+
+            <div class="price">
+                {{ product.price }} ₽
+            </div>
+
+            <div class="description">
+                {{ product.description }}
+            </div>
+
+            <form id="cartForm">
+
+                <label>Размер:</label>
+
+                <select id="variantSelect" name="variant_id">
+
+                    {% for variant in variants %}
+                        <option value="{{ variant.id }}">
+                            {{ variant.size.name }} | {{ variant.color.name }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+                <div id="cartArea">
+
+                    <button id="cartBtn" class="buy-btn">
+                        Добавить в корзину
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="related-section">
+
+        <h2>Похожие товары</h2>
+
+        <div class="related-grid">
+
+            {% for item in related_products %}
+
+                <div class="related-card">
+
+                    <img
+                            src="{{ item.image.url }}"
+                            alt="{{ item.name }}">
+
+                    <div class="related-content">
+
+                        <h3>{{ item.name }}</h3>
+
+                        <div class="related-price">
+                            {{ item.price }} ₽
+                        </div>
+
+                        <a
+                                href="{% url 'product_detail' item.id %}"
+                                class="related-btn">
+                            Смотреть
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const cartArea = document.getElementById("cartArea");
+
+        document.getElementById("cartBtn")
+            .addEventListener("click", function (e) {
+                e.preventDefault();
+
+                const variantId = document.getElementById("variantSelect").value;
+
+                fetch("/cart/add/" + variantId + "/")
+                    .then(() => {
+
+                        let qty = 1;
+
+                        cartArea.innerHTML = `
+          <div class="qty-box">
+
+            <button type="button" class="qty-btn minus">−</button>
+
+            <span class="qty-value">1</span>
+
+            <button type="button" class="qty-btn plus">+</button>
+
+          </div>
+        `;
+
+                        const value = cartArea.querySelector(".qty-value");
+
+                        const plusBtn = cartArea.querySelector(".plus");
+                        const minusBtn = cartArea.querySelector(".minus");
+
+                        plusBtn.addEventListener("click", function () {
+                            qty++;
+                            value.textContent = qty;
+
+                            fetch("/cart/add/" + variantId + "/");
+                        });
+
+                        minusBtn.addEventListener("click", function () {
+                            if (qty > 1) {
+                                qty--;
+                                value.textContent = qty;
+
+                                fetch("/cart/remove/" + variantId + "/");
+                            } else {
+                                cartArea.innerHTML = `
+              <button id="cartBtn" class="buy-btn">
+                Добавить в корзину
+              </button>
+            `;
+
+                                attachCartButton();
+                            }
+                        });
+
+                    });
+
+            });
+
+        function attachCartButton() {
+            document.getElementById("cartBtn")
+                .addEventListener("click", function (e) {
+                    e.preventDefault();
+                    location.reload();
+                });
+        }
+
+    </script>
+
+{% endblock %}

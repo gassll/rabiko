@@ -1,57 +1,445 @@
 {% extends "registration/../base.html" %}
 
 {% block title %}
-Оформление заказа
+    Оформление заказа
 {% endblock %}
 
 {% block content %}
+    <style>
+        .checkout-page {
+            max-width: 900px;
+            margin: 40px auto;
+        }
 
-<h1>🧾 Оформление заказа</h1>
+        .checkout-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 30px;
+        }
 
-{% if items %}
+        .checkout-card {
+            background: #fff;
+            border: 1px solid #ece6df;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(107, 79, 58, .08);
+        }
 
-    <h3>Товары в заказе</h3>
+        .section-title {
+            color: #3a2f2a;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
 
-    {% for item in items %}
-        <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #ddd;">
-            <div>
-                {{ item.variant }} (x{{ item.quantity }})
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #ece6df;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            color: #3a2f2a;
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        .total-box {
+            margin-top: 25px;
+            text-align: right;
+            font-size: 30px;
+            font-weight: 700;
+            color: #3a2f2a;
+        }
+
+        .divider {
+            margin: 30px 0;
+            border: none;
+            height: 1px;
+            background: #ece6df;
+        }
+
+        .addresses {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .address-card {
+            background: #f7f1eb;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: .2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .address-card:hover {
+            border-color: #6b4f3a;
+        }
+
+        .address-card input[type="radio"] {
+            accent-color: #6b4f3a;
+            width: 18px;
+            height: 18px;
+        }
+
+        .address-text {
+            color: #3a2f2a;
+            font-weight: 500;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: #6b4f3a;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .confirm-btn:hover {
+            background: #4f3929;
+            transform: translateY(-2px);
+        }
+
+        .empty-cart {
+            background: #f7f1eb;
+            padding: 30px;
+            border-radius: 24px;
+            text-align: center;
+            color: #6b4f3a;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .item-price {
+            min-width: 120px;
+            text-align: right;
+
+            font-size: 26px;
+            font-weight: 700;
+            color: #6b4f3a;
+        }
+
+        .checkout-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .checkout-input:focus {
+            outline: none;
+            border-color: #6b4f3a;
+        }
+
+        .checkout-textarea {
+            resize: none;
+            min-height: 100px;
+        }
+
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .payment-card {
+            background: #f7f1eb;
+            padding: 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: .2s;
+        }
+
+        .payment-card:hover {
+            border-color: #6b4f3a;
+        }
+
+        .payment-card.active {
+            border-color: #6b4f3a;
+            background: #f0e4d8;
+        }
+
+        .payment-card input {
+            margin-right: 10px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 20px;
+            margin-bottom: 15px;
+
+            background: #f7f1eb;
+            border-radius: 20px;
+            gap: 30px;
+        }
+
+        .order-product {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .order-image-wrapper {
+            width: 110px;
+            height: 110px;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .order-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .order-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #3a2f2a;
+        }
+
+        .order-qty {
+            color: #8d7b70;
+            margin-top: 6px;
+        }
+
+        .item-price {
+            min-width: 120px;
+            text-align: right;
+            font-size: 24px;
+            font-weight: 700;
+            color: #6b4f3a;
+        }
+    </style>
+
+    <div class="checkout-page">
+
+        <h1 class="checkout-title">Оформление заказа</h1>
+
+        {% if items %}
+
+            <div class="checkout-card">
+
+                <h3 class="section-title">Товары в заказе</h3>
+
+                {% for item in items %}
+                    <div class="order-item">
+
+                        <div class="order-product">
+
+                            <div class="order-image-wrapper">
+
+                                <img
+                                        src="{{ item.variant.product.image.url }}"
+                                        class="order-image"
+                                        alt="{{ item.variant }}">
+
+                            </div>
+
+                            <div>
+
+                                <div class="order-name">
+                                    {{ item.variant }}
+                                </div>
+
+                                <div class="order-qty">
+                                    Количество: {{ item.quantity }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="item-price">
+                            {{ item.sum }} ₽
+                        </div>
+
+                    </div>
+                {% endfor %}
+
+                <div class="total-box">
+                    Итого: {{ total }} ₽
+                </div>
+
+                <hr class="divider">
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <h3 class="section-title">
+                        Контактные данные
+                    </h3>
+
+                    <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            class="checkout-input"
+                            placeholder="8(918)765-98-98"
+                            pattern="8\(\d{3}\)\d{3}-\d{2}-\d{2}"
+                            maxlength="15"
+                            required>
+
+                    <h3 class="section-title">
+                        Адрес доставки
+                    </h3>
+
+                    <input
+                            type="text"
+                            id="address-input"
+                            name="address"
+                            class="checkout-input"
+                            list="address-list"
+                            placeholder="Введите адрес"
+                            autocomplete="off"
+                            required>
+
+                    <datalist id="address-list">
+                        <option value="г. Краснодар, ул. Красная, 15">
+                        <option value="г. Краснодар, ул. Северная, 120">
+                        <option value="г. Краснодар, ул. Московская, 50">
+                    </datalist>
+
+                    <h3 class="section-title">
+                        Способ оплаты
+                    </h3>
+
+                    <div class="payment-methods">
+
+                        <label class="payment-card">
+
+                            <input
+                                    type="radio"
+                                    name="payment_method"
+                                    value="cash"
+                                    required>
+
+                            Наличными при получении
+
+                        </label>
+
+                        <label class="payment-card">
+
+                            <input
+                                    type="radio"
+                                    name="payment_method"
+                                    value="card">
+
+                            Банковской картой
+
+                        </label>
+
+                    </div>
+
+                    <button
+                            type="submit"
+                            class="confirm-btn">
+
+                        Подтвердить заказ
+
+                    </button>
+
+                </form>
+
             </div>
 
-            <div>
-                {{ item.sum }} ₽
+        {% else %}
+
+            <div class="empty-cart">
+                Корзина пуста
             </div>
-        </div>
-    {% endfor %}
 
-    <h2 style="text-align:right; margin-top:20px;">
-        Итого: {{ total }} ₽
-    </h2>
+        {% endif %}
 
-    <hr style="margin:20px 0;">
+    </div>
 
-    <form method="POST">
-        {% csrf_token %}
+    <script>
 
-        <h3>Выберите адрес доставки</h3>
+        document.querySelectorAll(
+            'input[name="payment_method"]'
+        ).forEach(radio => {
 
-        {% for address in addresses %}
-            <label style="display:block; margin-bottom:10px;">
-                <input type="radio" name="address" value="{{ address.id }}" required>
-                {{ address.city }}, {{ address.street }}, {{ address.house }}
-            </label>
-        {% endfor %}
+            radio.addEventListener('change', () => {
 
-        <button type="submit"
-                style="margin-top:20px; padding:10px 15px; background:#a07c5a; color:white; border:none; border-radius:6px;">
-            Подтвердить заказ
-        </button>
-    </form>
+                document
+                    .querySelectorAll('.payment-card')
+                    .forEach(card => {
+                        card.classList.remove('active');
+                    });
 
-{% else %}
+                radio
+                    .closest('.payment-card')
+                    .classList.add('active');
+            });
+        });
 
-    <p>Корзина пустая 🛒</p>
+        const phoneInput =
+            document.getElementById('phone');
 
-{% endif %}
+        phoneInput.addEventListener('input', function (e) {
 
+            let x =
+                e.target.value.replace(/\D/g, '');
+
+            if (!x.startsWith('8')) {
+                x = '8' + x;
+            }
+
+            x = x.substring(0, 11);
+
+            let result = '';
+
+            if (x.length > 0)
+                result += x.substring(0, 1);
+
+            if (x.length > 1)
+                result += '(' + x.substring(1, 4);
+
+            if (x.length >= 4)
+                result += ')';
+
+            if (x.length > 4)
+                result += x.substring(4, 7);
+
+            if (x.length > 7)
+                result += '-' + x.substring(7, 9);
+
+            if (x.length > 9)
+                result += '-' + x.substring(9, 11);
+
+            e.target.value = result;
+        });
+
+    </script>
 {% endblock %}

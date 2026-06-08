@@ -4,32 +4,51 @@
 
     <!-- logo -->
     <a href="/" class="logo">
-        <img src="{% static 'media/icons/logo.png' %}" alt="logo">
+        <img src="{% static 'media/../../static/images/../../static/icons/logo.png' %}" alt="logo">
     </a>
 
     <!-- nav -->
     <nav class="nav">
 
-        <a href="/">Главная</a>
-        <a href="/catalog/">Каталог</a>
-        <a href="/about/">О нас</a>
+        <a href="/"
+           class="{% if request.path == '/' %}active{% endif %}">
+            Главная
+        </a>
+
+        <a href="/catalog/"
+           class="{% if '/catalog/' in request.path %}active{% endif %}">
+            Каталог
+        </a>
+
+        <a href="/about/"
+           class="{% if '/about/' in request.path %}active{% endif %}">
+            О нас
+        </a>
+
+        <a href="/reviews/"
+           class="{% if '/reviews/' in request.path %}active{% endif %}">
+            Отзывы
+        </a>
 
     </nav>
 
     <!-- SEARCH -->
-    <form action="/catalog/" method="GET" class="search-form">
+    <form action="/catalog/" method="GET" class="header-search" id="searchForm">
 
         <input
                 type="text"
                 name="q"
+                id="searchInput"
                 placeholder="Поиск товаров..."
                 value="{{ request.GET.q }}"
         >
 
+        <!-- крестик -->
+        <button type="button" class="clear-search" id="clearSearch">✕</button>
+
+        <!-- поиск -->
         <button type="submit">
-
-            <img src="{% static 'media/icons/search.svg' %}" alt="search">
-
+            <img src="{% static 'icons/search.svg' %}" alt="search">
         </button>
 
     </form>
@@ -38,29 +57,29 @@
     <div class="icons">
 
         <a href="{% url 'favorites' %}" class="icon">
-            <img src="{% static 'media/icons/heart.svg' %}" alt="favorites">
+            <img src="{% static 'media/../../static/images/../../static/icons/heart.svg' %}" alt="favorites">
         </a>
 
         <a href="/cart/" class="icon cart-icon">
 
-            <img src="{% static 'media/icons/cart.svg' %}" alt="cart">
+            <img src="{% static 'media/../../static/images/../../static/icons/cart.svg' %}" alt="cart">
 
             <span class="badge">
-                0
-            </span>
+    {{ cart_count }}
+</span>
 
         </a>
 
         {% if user.is_authenticated %}
 
             <a href="{% url 'profile' %}" class="icon">
-                <img src="{% static 'media/icons/profile.svg' %}" alt="profile">
+                <img src="{% static 'media/../../static/images/../../static/icons/profile.svg' %}" alt="profile">
             </a>
 
         {% else %}
 
             <a href="{% url 'login' %}" class="icon">
-                <img src="{% static 'media/icons/profile.svg' %}" alt="login">
+                <img src="{% static 'media/../../static/images/../../static/icons/profile.svg' %}" alt="login">
             </a>
 
         {% endif %}
@@ -68,3 +87,28 @@
     </div>
 
 </header>
+
+<script>
+    const input = document.getElementById("searchInput");
+    const clearBtn = document.getElementById("clearSearch");
+    const form = document.getElementById("searchForm");
+
+    function toggleClear() {
+        if (input.value.length > 0) {
+            clearBtn.style.display = "block";
+        } else {
+            clearBtn.style.display = "none";
+        }
+    }
+
+    input.addEventListener("input", toggleClear);
+
+    clearBtn.addEventListener("click", () => {
+        input.value = "";
+        toggleClear();
+
+        window.location.href = "/catalog/";
+    });
+
+    toggleClear();
+</script>

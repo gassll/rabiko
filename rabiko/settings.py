@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'cart',
     'rest_framework',
     "favorites",
+    "reviews",
 ]
 
 MIDDLEWARE = [
@@ -47,6 +48,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'catalog.context_processors.cart_counter',
             ],
         },
     },
@@ -55,9 +57,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'rabiko.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "rabiko",
+        "USER": "postgres",
+        "PASSWORD": "admin",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -86,6 +92,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = "/users/login/"

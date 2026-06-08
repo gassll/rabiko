@@ -6,10 +6,11 @@ from catalog.models import ProductVariant
 
 class Order(models.Model):
     STATUS_CHOICES = (
-        ('new', 'Новый'),
-        ('paid', 'Оплачен'),
-        ('sent', 'Отправлен'),
-        ('done', 'Получен'),
+        ('new', 'Оформлен'),
+        ('processing', 'Собирается'),
+        ('delivery', 'В пути'),
+        ('done', 'Доставлен'),
+        ('cancelled', 'Отменён'),
     )
 
     user = models.ForeignKey(
@@ -18,7 +19,7 @@ class Order(models.Model):
     )
 
     status = models.CharField(
-        max_length=50,
+        max_length=20,
         choices=STATUS_CHOICES,
         default='new'
     )

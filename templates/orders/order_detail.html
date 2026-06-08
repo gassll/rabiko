@@ -1,4 +1,4 @@
-{% extends "registration/../base.html" %}
+{% extends "base.html" %}
 
 {% block title %}
 Заказ #{{ order.id }}
@@ -6,26 +6,205 @@
 
 {% block content %}
 
-<h1>🧾 Заказ #{{ order.id }}</h1>
+<style>
 
-<p><b>Статус:</b> {{ order.status }}</p>
-<p><b>Сумма:</b> {{ order.total_price }} ₽</p>
-<p><b>Дата:</b> {{ order.created_at }}</p>
+.order-page{
+    max-width: 1200px;
+    margin: 40px auto;
+}
 
-<hr>
+.order-title{
+    font-size: 42px;
+    font-weight: 700;
+    color: #3a2f2a;
+    margin-bottom: 30px;
+}
 
-<h3>Товары</h3>
+.order-info{
+    background: #f7f1eb;
+    border: 1px solid #e4d6c8;
+    border-radius: 24px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
 
-{% for item in order.items.all %}
-    <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #ddd;">
-        <div>
-            {{ item.product_variant }} (x{{ item.quantity }})
+.order-grid{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.info-item{
+    min-width: 220px;
+}
+
+.info-label{
+    color: #8d7b70;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.info-value{
+    font-size: 22px;
+    font-weight: 700;
+    color: #3a2f2a;
+}
+
+.status-badge{
+    display: inline-block;
+    padding: 10px 16px;
+    background: white;
+    border: 1px solid #d9c5b4;
+    border-radius: 999px;
+    color: #6b4f3a;
+    font-weight: 600;
+}
+
+.section-title{
+    font-size: 28px;
+    font-weight: 700;
+    color: #3a2f2a;
+    margin-bottom: 20px;
+}
+
+.item-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: white;
+    border: 1px solid #ece6df;
+    border-radius: 20px;
+
+    padding: 20px 25px;
+    margin-bottom: 15px;
+
+    transition: .2s;
+}
+
+.item-card:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(107,79,58,.10);
+}
+
+.item-name{
+    font-size: 18px;
+    font-weight: 600;
+    color: #3a2f2a;
+}
+
+.item-qty{
+    color: #8d7b70;
+    margin-top: 5px;
+}
+
+.item-price{
+    font-size: 22px;
+    font-weight: 700;
+    color: #3a2f2a;
+}
+
+.back-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 52px;
+    padding: 0 22px;
+
+    background: #6b4f3a;
+    color: white;
+
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 700;
+
+    transition: .2s;
+    margin-top: 20px;
+}
+
+.back-btn:hover{
+    background: #4f3929;
+}
+
+</style>
+
+<div class="order-page">
+
+    <h1 class="order-title">
+        Заказ #{{ order.id }}
+    </h1>
+
+    <div class="order-info">
+
+        <div class="order-grid">
+
+            <div class="info-item">
+                <div class="info-label">
+                    Статус
+                </div>
+
+                <div class="status-badge">
+                    {{ order.get_status_display }}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">
+                    Сумма заказа
+                </div>
+
+                <div class="info-value">
+                    {{ order.total_price }} ₽
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">
+                    Дата оформления
+                </div>
+
+                <div class="info-value">
+                    {{ order.created_at|date:"d.m.Y H:i" }}
+                </div>
+            </div>
+
         </div>
 
-        <div>
-            {{ item.price }} ₽
-        </div>
     </div>
-{% endfor %}
+
+    <h2 class="section-title">
+        Товары в заказе
+    </h2>
+
+    {% for item in order.items.all %}
+
+        <div class="item-card">
+
+            <div>
+
+                <div class="item-name">
+                    {{ item.product_variant }}
+                </div>
+
+                <div class="item-qty">
+                    Количество: {{ item.quantity }}
+                </div>
+
+            </div>
+
+            <div class="item-price">
+                {{ item.price }} ₽
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+    <a href="{% url 'profile_orders' %}" class="back-btn">
+        ← Назад к заказам
+    </a>
+
+</div>
 
 {% endblock %}

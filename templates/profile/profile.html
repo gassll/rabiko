@@ -83,11 +83,16 @@
         }
 
         .empty-orders {
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 40px;
+            text-align: center;
+
             background: #f7f1eb;
             border: 1px solid #e4d6c8;
             border-radius: 16px;
-            padding: 40px;
-            text-align: center;
+
             color: #6b4f3a;
         }
 
@@ -169,7 +174,7 @@
                     </td>
 
                     <td>
-                        <a href="">
+                        <a href="{% url 'order_detail' order.id %}">
                             Подробнее
                         </a>
                     </td>

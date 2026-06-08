@@ -1,59 +1,394 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Каталог{% endblock %}
+{% block title %}
+    Каталог
+{% endblock %}
 
 {% block content %}
 
-<div class="container py-4">
+    <style>
 
-    <h2 style="color:#3a2f2a;">Каталог товаров</h2>
+        .catalog-page {
+            margin-top: 40px;
+        }
 
-    <!-- SEARCH -->
-    <form method="GET" style="margin:20px 0;">
-        <input type="text"
-               name="q"
-               placeholder="Поиск товаров..."
-               value="{{ query }}"
-               style="padding:10px;width:300px;border:1px solid #ddd;border-radius:8px;">
+        .catalog-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 30px;
+        }
 
-        <button type="submit"
-                style="padding:10px 15px;background:#a07c5a;color:white;border:none;border-radius:8px;">
-            Поиск
-        </button>
-    </form>
+        .catalog-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
 
-    <!-- PRODUCTS -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;">
+        .filters {
+            background: #f7f1eb;
+            padding: 25px;
+            border-radius: 24px;
+            height: fit-content;
+        }
 
-        {% for product in products %}
-        <div style="border:1px solid #eee;border-radius:12px;padding:15px;background:white;">
+        .filters h3 {
+            color: #3a2f2a;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
 
-            {% if product.image %}
-                <img src="{{ product.image.url }}"
-                     style="width:100%;height:200px;object-fit:cover;border-radius:10px;">
-            {% else %}
-                <div style="height:200px;background:#f5f5f5;border-radius:10px;"></div>
-            {% endif %}
+        .filters h3:first-child {
+            margin-top: 0;
+        }
 
-            <h4 style="margin:10px 0;color:#3a2f2a;">
-                {{ product.name }}
-            </h4>
+        .filters input,
+        .filters select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
 
-            <p style="color:#8b7355;">
-                {{ product.price }} ₽
-            </p>
+        .filter-btn {
+            width: 100%;
+            border: none;
+            background: #6b4f3a;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
 
-            <a href="{% url 'product_detail' product.id %}"
-               style="display:block;text-align:center;padding:8px;background:#a07c5a;color:white;border-radius:8px;text-decoration:none;">
-                Открыть
-            </a>
+        .filter-btn:hover {
+            background: #4f3929;
+        }
+
+        .products-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .product-card {
+            position: relative;
+            background: #fff;
+            border: 1px solid #ece6df;
+            border-radius: 24px;
+            overflow: hidden;
+            transition: .2s;
+            width: 300px;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(107, 79, 58, .12);
+        }
+
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            font-size: 22px;
+            color: #6b4f3a;
+            z-index: 20;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+            text-decoration: none;
+        }
+
+        .favorite-btn.active {
+            color: red;
+        }
+
+        .product-image-wrapper {
+            width: 100%;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f7f1eb;
+        }
+
+        .product-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-content {
+            padding: 18px;
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 12px;
+        }
+
+        .product-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 10px;
+        }
+
+        .product-desc {
+            color: #8d7b70;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .product-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 52px;
+            background: #6b4f3a;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .product-btn:hover {
+            background: #4f3929;
+            transform: translateY(-2px);
+        }
+
+        .card-link {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .cart-area {
+            margin-top: auto;
+        }
+
+        .qty-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            width: 100%;
+            height: 52px;
+
+            background: #f7f1eb;
+            border-radius: 14px;
+            padding: 0 12px;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #6b4f3a;
+            color: white;
+
+            font-size: 22px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .qty-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #3a2f2a;
+        }
+    </style>
+
+    <div class="catalog-page">
+
+        <h1 class="catalog-title">Каталог товаров</h1>
+
+        <div class="catalog-layout">
+
+            <aside class="filters">
+                <form method="get">
+
+                    <h3>Категория</h3>
+                    <select name="category">
+                        <option value="">Все категории</option>
+                        {% for category in categories %}
+                            <option value="{{ category.slug }}"
+                                    {% if request.GET.category == category.slug %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <h3>Цена</h3>
+                    <input type="number" name="min_price" placeholder="От"
+                           value="{{ request.GET.min_price }}">
+                    <input type="number" name="max_price" placeholder="До"
+                           value="{{ request.GET.max_price }}">
+
+                    <button type="submit" class="filter-btn">
+                        Применить
+                    </button>
+
+                </form>
+            </aside>
+
+            <div>
+
+                {% if products %}
+
+                    <div class="products-grid">
+
+                        {% for product in products %}
+
+                            <div class="product-card">
+
+                                <a href="{% url 'product_detail' product.id %}"
+                                   class="card-link"></a>
+
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'toggle_favorite' product.id %}"
+                                       class="favorite-btn {% if product.id in favorites %}active{% endif %}">
+                                        ♥
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'login' %}?next={{ request.path }}&favorite={{ product.id }}"
+                                       class="favorite-btn">
+                                        ♥
+                                    </a>
+                                {% endif %}
+
+                                <div class="product-image-wrapper">
+                                    <img src="{{ product.image.url }}" class="product-image">
+                                </div>
+
+                                <div class="product-content">
+
+                                    <div class="product-name">{{ product.name }}</div>
+
+                                    <div class="product-price">{{ product.price }} ₽</div>
+
+                                    <div class="product-desc">
+                                        Rabiko • одежда для новорождённых
+                                    </div>
+
+
+                                    <div class="cart-area"
+                                         data-id="{{ product.variants.first.id }}"
+                                         data-qty="{{ product.cart_qty }}">
+
+                                        <button class="product-btn add-btn">В корзину</button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty">
+                        По вашему запросу ничего не найдено
+                    </div>
+
+                {% endif %}
+
+            </div>
 
         </div>
-        {% endfor %}
 
     </div>
 
-</div>
+    <script>
+        function updateBadge(count) {
+            document.querySelector(".badge").textContent = count;
+        }
+
+        document.querySelectorAll(".cart-area").forEach(area => {
+
+            const id = area.dataset.id;
+            let qty = parseInt(area.dataset.qty || 0);
+
+            function render() {
+                if (qty === 0) {
+                    area.innerHTML = `
+                <button class="product-btn add-btn">В корзину</button>
+            `;
+
+                    area.querySelector(".add-btn").addEventListener("click", () => {
+                        fetch("/cart/add/" + id + "/")
+                            .then(r => r.json())
+                            .then(data => {
+                                qty = 1;
+                                updateBadge(data.count);
+                                render();
+                            });
+                    });
+
+                } else {
+                    area.innerHTML = `
+                <div class="qty-box">
+                    <button class="qty-btn minus">−</button>
+                    <span class="qty-value">${qty}</span>
+                    <button class="qty-btn plus">+</button>
+                </div>
+            `;
+
+                    area.querySelector(".plus").addEventListener("click", () => {
+                        fetch("/cart/add/" + id + "/")
+                            .then(r => r.json())
+                            .then(data => {
+                                qty++;
+                                updateBadge(data.count);
+                                render();
+                            });
+                    });
+
+                    area.querySelector(".minus").addEventListener("click", () => {
+                        fetch("/cart/decrease/" + id + "/")
+                            .then(r => r.json())
+                            .then(data => {
+                                qty = Math.max(0, qty - 1);
+                                updateBadge(data.count);
+                                render();
+                            });
+                    });
+                }
+            }
+
+            render();
+        });
+    </script>
 
 {% endblock %}
