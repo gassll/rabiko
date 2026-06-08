@@ -14,25 +14,24 @@ from django.contrib import messages
 User = get_user_model()
 
 
-# REGISTER
 def register_view(request):
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
+    form = RegisterForm(request.POST or None)
 
+    if request.method == "POST":
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password"])
+
+            user.set_password(form.cleaned_data["password1"])
             user.save()
 
             login(request, user)
+            messages.success(request, "Регистрация успешна")
             return redirect("profile")
-    else:
-        form = RegisterForm()
+
+        print(form.errors)
 
     return render(request, "registration/register.html", {"form": form})
 
-
-# LOGIN
 def login_view(request):
     form = LoginForm(request.POST or None)
 

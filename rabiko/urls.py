@@ -12,7 +12,6 @@ urlpatterns = [
     path('favorites/', include('favorites.urls')),
 
     path('users/', include('users.urls')),
-    path("", include("users.urls")),
 ]
 
 if settings.DEBUG:

@@ -9,7 +9,7 @@ from django.db.models import Q
 
 # ГЛАВНАЯ
 def home(request):
-    reviews = Review.objects.all()[:6]  # если есть
+    reviews = Review.objects.filter(is_published=True)[:6]
 
     recommended = Product.objects.order_by("?")[:5]
 

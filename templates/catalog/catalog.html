@@ -8,6 +8,11 @@
 {% block content %}
 
     <style>
+        .cart-area,
+        .favorite-btn {
+            position: relative;
+            z-index: 2;
+        }
 
         .catalog-page {
             margin-top: 40px;
@@ -332,10 +337,6 @@
     </div>
 
     <script>
-        function updateBadge(count) {
-            document.querySelector(".badge").textContent = count;
-        }
-
         document.querySelectorAll(".cart-area").forEach(area => {
 
             const id = area.dataset.id;
@@ -350,10 +351,8 @@
                     area.querySelector(".add-btn").addEventListener("click", () => {
                         fetch("/cart/add/" + id + "/")
                             .then(r => r.json())
-                            .then(data => {
-                                qty = 1;
-                                updateBadge(data.count);
-                                render();
+                            .then(() => {
+                                location.reload();
                             });
                     });
 
@@ -369,20 +368,16 @@
                     area.querySelector(".plus").addEventListener("click", () => {
                         fetch("/cart/add/" + id + "/")
                             .then(r => r.json())
-                            .then(data => {
-                                qty++;
-                                updateBadge(data.count);
-                                render();
+                            .then(() => {
+                                location.reload();
                             });
                     });
 
                     area.querySelector(".minus").addEventListener("click", () => {
                         fetch("/cart/decrease/" + id + "/")
                             .then(r => r.json())
-                            .then(data => {
-                                qty = Math.max(0, qty - 1);
-                                updateBadge(data.count);
-                                render();
+                            .then(() => {
+                                location.reload();
                             });
                     });
                 }

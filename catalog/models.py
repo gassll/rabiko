@@ -6,6 +6,10 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
 
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
     def __str__(self):
         return self.name
 
@@ -37,12 +41,20 @@ class Product(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Товар"
+        verbose_name_plural = "Товары"
+
     def __str__(self):
         return self.name
 
 
 class Size(models.Model):
     name = models.CharField(max_length=20)
+
+    class Meta:
+        verbose_name = "Размер"
+        verbose_name_plural = "Размеры"
 
     def __str__(self):
         return self.name
@@ -64,6 +76,8 @@ class ProductVariant(models.Model):
     stock = models.PositiveIntegerField(default=0)
 
     class Meta:
+        verbose_name = "Вариант товара"
+        verbose_name_plural = "Варианты товаров"
         constraints = [
             models.UniqueConstraint(
                 fields=['product', 'size'],
@@ -90,6 +104,8 @@ class Favorite(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = "Избранное"
+        verbose_name_plural = "Избранные"
         unique_together = ('user', 'product')
 
 

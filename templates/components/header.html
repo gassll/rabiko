@@ -57,7 +57,12 @@
     <div class="icons">
 
         <a href="{% url 'favorites' %}" class="icon">
-            <img src="{% static 'media/../../static/images/../../static/icons/heart.svg' %}" alt="favorites">
+            <img src="{% static 'icons/heart.svg' %}" alt="favorites">
+
+            <span class="badge">
+                {{ favorites_count }}
+            </span>
+
         </a>
 
         <a href="/cart/" class="icon cart-icon">
@@ -65,8 +70,8 @@
             <img src="{% static 'media/../../static/images/../../static/icons/cart.svg' %}" alt="cart">
 
             <span class="badge">
-    {{ cart_count }}
-</span>
+                {{ cart_count }}
+            </span>
 
         </a>
 

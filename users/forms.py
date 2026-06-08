@@ -4,13 +4,23 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 User = get_user_model()
 
-
 class RegisterForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
+    password1 = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ["username", "email", "password"]
+        fields = ["username", "email"]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            self.add_error("password2", "Пароли не совпадают")
+
+        return cleaned_data
 
 class LoginForm(forms.Form):
     username = forms.CharField()

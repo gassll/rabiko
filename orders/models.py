@@ -33,6 +33,11 @@ class Order(models.Model):
         auto_now_add=True
     )
 
+    class Meta:
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
@@ -40,6 +45,9 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
 
+    class Meta:
+        verbose_name = "Товар в заказе"
+        verbose_name_plural = "Товары в заказах"
 
 class DeliveryAddress(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='addresses')
@@ -51,3 +59,7 @@ class DeliveryAddress(models.Model):
     apartment = models.CharField(max_length=50, blank=True)
     postal_code = models.CharField(max_length=20)
     is_default = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "Адрес доставки"
+        verbose_name_plural = "Адреса доставки"
