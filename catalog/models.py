@@ -48,13 +48,6 @@ class Size(models.Model):
         return self.name
 
 
-class Color(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
 class ProductVariant(models.Model):
     product = models.ForeignKey(
         Product,
@@ -68,16 +61,18 @@ class ProductVariant(models.Model):
         null=True
     )
 
-    color = models.ForeignKey(
-        Color,
-        on_delete=models.SET_NULL,
-        null=True
-    )
-
     stock = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['product', 'size'],
+                name='unique_product_size'
+            )
+        ]
+
     def __str__(self):
-        return f'{self.product.name} - {self.size} - {self.color}'
+        return f'{self.product.name} - {self.size}'
 
 
 class Favorite(models.Model):

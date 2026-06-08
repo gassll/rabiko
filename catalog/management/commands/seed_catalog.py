@@ -6,22 +6,19 @@ from catalog.models import (
     Product,
     ProductImage,
     Size,
-    Color,
     ProductVariant
 )
 
 import random
 
-
 DATA = {
-    "Боди": [
+    "Боди и ползунки": [
         {
             "name": "Боди майки для новорожденных",
             "main": "products/body-1-main.webp",
             "images": [
                 "products/body-1-2.webp",
                 "products/body-1-3.webp",
-                "products/body-1-4.webp",
             ]
         },
         {
@@ -30,6 +27,25 @@ DATA = {
             "images": [
                 "products/body-2-2.webp",
                 "products/body-2-3.webp",
+            ]
+        },
+    ],
+
+    "Головные уборы": [
+        {
+            "name": "Чепчики для новорожденного в роддом",
+            "main": "products/cap-1-main.webp",
+            "images": [
+                "products/cap-1-2.webp",
+                "products/cap-1-3.webp",
+            ]
+        },
+        {
+            "name": "Чепчики для новорожденного в роддом",
+            "main": "products/cap-2-main.webp",
+            "images": [
+                "products/cap-2-2.webp",
+                "products/cap-2-3.webp",
             ]
         },
     ],
@@ -53,7 +69,7 @@ DATA = {
         },
     ],
 
-    "Маечки": [
+    "Белье": [
         {
             "name": "Майки для малышей",
             "main": "products/T-shirt-1-main.webp",
@@ -62,7 +78,7 @@ DATA = {
                 "products/T-shirt-1-3.webp",
             ]
         },
-{
+        {
             "name": "Майки для малышей",
             "main": "products/T-shirt-2-main.webp",
             "images": [
@@ -77,32 +93,25 @@ DATA = {
 class Command(BaseCommand):
     help = "Заполнение каталога товарами"
 
-
     def handle(self, *args, **kwargs):
         Category.objects.all().delete()
         ProductVariant.objects.all().delete()
         ProductImage.objects.all().delete()
         Product.objects.all().delete()
 
-
-        sizes = ["50", "56", "62", "68", "74", "80"]
+        sizes = [
+            "56-62",
+            "62-68",
+            "68-74",
+            "74-80",
+            "80-86",
+            "86-92",
+        ]
 
         for size in sizes:
             Size.objects.get_or_create(name=size)
 
-        colors = [
-            "Белый",
-            "Бежевый",
-            "Кремовый",
-            "Розовый",
-            "Голубой",
-        ]
-
-        for color in colors:
-            Color.objects.get_or_create(name=color)
-
         all_sizes = list(Size.objects.all())
-        all_colors = list(Color.objects.all())
 
         for category_name, products in DATA.items():
 
@@ -132,18 +141,15 @@ class Command(BaseCommand):
                 )
 
                 for image_path in item["images"]:
-
                     ProductImage.objects.create(
                         product=product,
                         image=image_path
                     )
 
-                for _ in range(3):
-
+                for size in all_sizes:
                     ProductVariant.objects.create(
                         product=product,
-                        size=random.choice(all_sizes),
-                        color=random.choice(all_colors),
+                        size=size,
                         stock=random.randint(1, 20)
                     )
 

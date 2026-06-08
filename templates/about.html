@@ -9,238 +9,218 @@
 
     <style>
         .about-page {
-    padding: 40px 0;
-}
+            padding: 40px 0;
+        }
 
-/* главный контейнер */
-.about-card {
-    background: #f8f4ef;
-    border-radius: 28px;
-    padding: 70px;
+        /* ================= HERO ================= */
 
-    display: flex;
-    flex-direction: column;
-    gap: 60px;
+        .about-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-    box-shadow: 0 20px 60px rgba(0,0,0,0.06);
-    border: 1px solid #eee3d8;
-}
+            gap: 60px;
 
-/* TITLE */
-.about-title {
-    font-size: 52px;
-    font-weight: 800;
-    color: #2f2622;
-    margin-bottom: 20px;
-}
+            padding: 60px;
+            border-radius: 28px;
 
-/* TEXT */
-.about-subtitle {
-    font-size: 18px;
-    color: #6b5b4f;
-    line-height: 1.8;
-    max-width: 750px;
-}
+            background: #f8f4ef;
+            border: 1px solid #eee3d8;
+        }
 
-/* IMAGE */
-.about-image {
-    width: 100%;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.08);
-}
+        .about-kicker {
+            display: inline-block;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 999px;
 
-.about-image img {
-    width: 100%;
-    height: 520px;
-    object-fit: cover;
-    display: block;
-    transition: 0.4s ease;
-}
+            background: #efe6da;
+            color: #3a2f2a;
 
-.about-image img:hover {
-    transform: scale(1.02);
-}
+            margin-bottom: 15px;
+        }
 
-/* GRID */
-.about-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-}
+        .about-title {
+            font-size: 64px;
+            font-weight: 800;
+            color: #2f2622;
+            margin-bottom: 25px;
+        }
 
-/* CARDS */
-.about-item {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 30px;
+        .about-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #6b5b4f;
+            max-width: 600px;
+        }
 
-    border: 1px solid #f0e6dc;
-    transition: 0.3s ease;
-}
+        /* IMAGE */
+        .about-hero-image {
+            flex: 1;
+            border-radius: 24px;
+            overflow: hidden;
+        }
 
-.about-item:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-}
+        .about-hero-image img {
+            width: 100%;
+            height: 520px;
+            object-fit: cover;
+            transition: 0.4s;
+        }
 
-.about-item h3 {
-    margin-top: 0;
-    color: #3a2f2a;
-    margin-bottom: 12px;
-    font-size: 20px;
-}
+        .about-hero-image img:hover {
+            transform: scale(1.03);
+        }
 
-.about-item p {
-    color: #6b5b4f;
-    line-height: 1.7;
-}
+        /* ================= FEATURES ================= */
 
-/* BANNER */
-.about-banner {
-    background: linear-gradient(135deg, #3a2f2a, #5a4a42);
-    padding: 60px;
-    border-radius: 24px;
+        .about-features {
+            margin-top: 40px;
 
-    text-align: center;
-    color: white;
-}
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
 
-.about-banner h2 {
-    margin: 0 0 15px;
-    font-size: 38px;
-    font-weight: 700;
-}
+        .feature {
+            background: #fff;
+            border: 1px solid #f0e6dc;
 
-.about-banner p {
-    color: #e9ddd0;
-    font-size: 17px;
-    line-height: 1.8;
-    max-width: 700px;
-    margin: 0 auto;
-}
+            border-radius: 20px;
+            padding: 30px;
 
-/* BACK BUTTON */
-.back-btn {
-    display: inline-block;
+            transition: 0.3s;
+        }
 
-    margin: 20px 0;
+        .feature:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+        }
 
-    padding: 10px 16px;
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #3a2f2a;
+            margin-bottom: 10px;
+        }
 
-    background: #efe6da;
-    border: 1px solid #d9c7b5;
+        .feature-text {
+            color: #6b5b4f;
+            line-height: 1.6;
+        }
 
-    border-radius: 12px;
+        /* ================= BANNER ================= */
 
-    color: #3a2f2a;
-    text-decoration: none;
-    font-weight: 600;
+        .about-banner {
+            margin-top: 40px;
 
-    transition: 0.2s ease;
-}
+            background: linear-gradient(135deg, #3a2f2a, #5a4a42);
+            border-radius: 28px;
 
-.back-btn:hover {
-    background: #3a2f2a;
-    color: white;
-    transform: translateY(-2px);
-}
+            padding: 60px;
+
+            text-align: center;
+            color: white;
+        }
+
+        .about-banner h2 {
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        .about-banner p {
+            font-size: 17px;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #e9ddd0;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .about-hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px;
+            }
+
+            .about-features {
+                grid-template-columns: 1fr;
+            }
+
+            .about-hero-image img {
+                height: 360px;
+            }
+        }
     </style>
-    {#    {% if request.path != "/" %}#}
-    {##}
-    {#        <a href="/" class="back-btn">#}
-    {#            ← Вернуться на главную#}
-    {#        </a>#}
-    {##}
-    {#    {% endif %}#}
 
     <section class="about-page">
 
         <div class="about-card">
 
-            <!-- TEXT -->
-            <div>
+            <section class="about-hero">
 
-                <div class="about-title">
-                    Rabiko
-                </div>
+                <div class="about-hero-content">
 
-                <div class="about-subtitle">
 
-                    Rabiko — бренд одежды для новорожденных,
-                    созданный с любовью и заботой о малышах.
+                    <h1 class="about-title">
+                        О бренде Rabiko
+                    </h1>
 
-                    <br><br>
+                    <p class="about-text">
+                        Rabiko — бренд одежды для новорожденных,
+                        созданный с любовью и заботой о малышах.
 
-                    Наша миссия — обеспечить комфорт и стиль
-                    самым маленьким, используя только
-                    высококачественные материалы
-                    и уникальный дизайн.
+                        <br><br>
 
-                </div>
-
-            </div>
-
-            <!-- IMAGE -->
-            <div class="about-image">
-
-                <img src="{% static 'images/about.webp' %}"
-                     alt="Rabiko">
-
-            </div>
-
-            <!-- CARDS -->
-            <div class="about-grid">
-
-                <div class="about-item">
-
-                    <h3>Комфорт</h3>
-
-                    <p>
-                        Мы создаём одежду, в которой малышам
-                        удобно двигаться, спать и познавать мир.
+                        Мы создаём вещи, в которых комфорт
+                        важнее всего: мягкие ткани, удобные формы
+                        и внимание к каждой детали.
                     </p>
 
                 </div>
 
-                <div class="about-item">
-
-                    <h3>Качество</h3>
-
-                    <p>
-                        Используем только мягкие,
-                        безопасные и качественные ткани.
-                    </p>
-
+                <div class="about-hero-image">
+                    <img src="{% static 'images/about.webp' %}" alt="Rabiko">
                 </div>
 
-                <div class="about-item">
+            </section>
 
-                    <h3>Стиль</h3>
 
-                    <p>
-                        Минималистичный дизайн,
-                        вдохновлённый теплом семьи и детства.
-                    </p>
+            <!-- FEATURES -->
+            <section class="about-features">
 
+                <div class="feature">
+                    <div class="feature-title">Комфорт</div>
+                    <div class="feature-text">Мягкие ткани и удобные формы для малышей</div>
                 </div>
 
-            </div>
+                <div class="feature">
+                    <div class="feature-title">Качество</div>
+                    <div class="feature-text">Только безопасные и проверенные материалы</div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-title">Стиль</div>
+                    <div class="feature-text">Минимализм и тёплая эстетика детства</div>
+                </div>
+
+            </section>
+
 
             <!-- BANNER -->
-            <div class="about-banner">
+            <section class="about-banner">
 
-                <h2>
-                    С любовью к каждому малышу
-                </h2>
+                <h2>С любовью к каждому малышу</h2>
 
                 <p>
-                    Мы верим, что детская одежда должна быть
-                    не только красивой, но и дарить ощущение
-                    заботы, уюта и безопасности каждый день.
+                    Мы верим, что детская одежда должна быть не просто красивой,
+                    а создавать ощущение заботы и безопасности каждый день.
                 </p>
 
-            </div>
+            </section>
 
         </div>
 

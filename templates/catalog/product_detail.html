@@ -369,7 +369,7 @@
 
                     {% for variant in variants %}
                         <option value="{{ variant.id }}">
-                            {{ variant.size.name }} | {{ variant.color.name }}
+                            {{ variant.size.name }}
                         </option>
                     {% endfor %}
 
@@ -493,6 +493,44 @@
                     e.preventDefault();
                     location.reload();
                 });
+        }
+
+    </script>
+
+    <script>
+
+        const images = [
+            "{{ product.image.url }}",
+
+            {% for img in product.images.all %}
+                "{{ img.image.url }}",
+            {% endfor %}
+        ];
+
+        let currentImage = 0;
+
+        function showImage(index) {
+            document.getElementById("mainImage").src = images[index];
+        }
+
+        function nextImage() {
+            currentImage++;
+
+            if (currentImage >= images.length) {
+                currentImage = 0;
+            }
+
+            showImage(currentImage);
+        }
+
+        function prevImage() {
+            currentImage--;
+
+            if (currentImage < 0) {
+                currentImage = images.length - 1;
+            }
+
+            showImage(currentImage);
         }
 
     </script>
