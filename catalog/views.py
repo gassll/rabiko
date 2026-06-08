@@ -11,7 +11,7 @@ from django.db.models import Q
 def home(request):
     reviews = Review.objects.all()[:6]  # если есть
 
-    recommended = Product.objects.order_by("?")[:3]
+    recommended = Product.objects.order_by("?")[:5]
 
     return render(request, "index.html", {
         "reviews": reviews,
@@ -73,7 +73,6 @@ def catalog_view(request):
         )
 
     categories = Category.objects.all()
-
 
     cart = request.session.get("cart", {})
 

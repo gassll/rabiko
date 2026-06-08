@@ -8,242 +8,178 @@
 {% block content %}
 
     <style>
-        /* HERO */
+        /* =========================
+           HERO (BACKGROUND STYLE)
+        ========================= */
+
         .hero {
+            position: relative;
             margin-top: 30px;
+            padding: 100px 60px;
 
-            background: linear-gradient(
-                    135deg,
-                    #efe6da,
-                    #f7f3ee
-            );
+            border-radius: 32px;
 
-            border-radius: 28px;
-
-            padding: 70px 60px;
+            background: url("{% static 'images/index.webp' %}") center/cover no-repeat;
 
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 50px;
 
             overflow: hidden;
         }
 
-        .hero-content {
-            max-width: 550px;
+        /* затемнение */
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
         }
 
+        /* контент поверх */
+        .hero-content {
+            position: relative;
+            max-width: 600px;
+            color: #fff;
+        }
+
+        /* бейдж */
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+
+            font-size: 13px;
+            font-weight: 600;
+
+            margin-bottom: 18px;
+            color: #fff;
+        }
+
+        /* заголовок */
         .hero-title {
             font-size: 58px;
             line-height: 1.1;
-            font-weight: 700;
+            font-weight: 800;
 
-            color: #3a2f2a;
-
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
+        /* текст */
         .hero-text {
             font-size: 18px;
             line-height: 1.7;
 
-            color: #6b5b4f;
-
             margin-bottom: 35px;
+            max-width: 520px;
+
+            opacity: 0.9;
         }
 
+        /* кнопки */
         .hero-buttons {
             display: flex;
-            gap: 15px;
+            gap: 14px;
         }
 
+        /* кнопки */
         .hero-btn {
             padding: 16px 28px;
-
             border-radius: 14px;
 
             text-decoration: none;
-
             font-size: 17px;
             font-weight: 600;
 
-            transition: background 0.2s,
-            transform 0.2s,
-            box-shadow 0.2s;
+            transition: 0.2s;
         }
 
-        /* main button */
+        /* primary */
         .hero-btn-primary {
-            background: #3a2f2a;
-            color: white;
-
-            box-shadow: 0 10px 25px rgba(58, 47, 42, 0.15);
+            background: #fff;
+            color: #2f2622;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         .hero-btn-primary:hover {
-            background: #241d19;
-
             transform: translateY(-3px);
-
-            box-shadow: 0 16px 35px rgba(58, 47, 42, 0.25);
         }
 
-        /* second button */
+        /* secondary */
         .hero-btn-secondary {
             background: transparent;
-
-            color: #3a2f2a;
-
-            border: 2px solid #3a2f2a;
+            color: #fff;
+            border: 2px solid #fff;
         }
 
         .hero-btn-secondary:hover {
-            background: #3a2f2a;
-            color: white;
-
+            background: #fff;
+            color: #2f2622;
             transform: translateY(-3px);
-
-            box-shadow: 0 16px 35px rgba(58, 47, 42, 0.20);
         }
 
-        /* images */
-        .hero-images {
-            display: flex;
-            gap: 20px;
-
-            flex-shrink: 0;
-        }
-
-        .hero-images img {
-            width: 260px;
-            height: 420px;
-
-            object-fit: cover;
-
-            border-radius: 24px;
-
-            transition: 0.3s;
-        }
-
-        .hero-images img:hover {
-            transform: translateY(-5px);
-        }
-
-        /* FEATURES */
-        .features {
-            margin-top: 60px;
-
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-
-            gap: 25px;
-        }
-
-        .feature-card {
-            background: #efe6da;
-
-            border-radius: 20px;
-
-            padding: 35px 30px;
-        }
-
-        .feature-title {
-            font-size: 24px;
-            font-weight: 700;
-
-            color: #3a2f2a;
-
-            margin-bottom: 15px;
-        }
-
-        .feature-text {
-            color: #6b5b4f;
-            line-height: 1.7;
-        }
-
-        /* ABOUT */
-
+        /* =========================
+           ABOUT
+        ========================= */
 
         .home-about {
             margin-top: 70px;
-
             background: #efe6da;
-
             border-radius: 28px;
-
             padding: 60px;
         }
 
         .home-about-title {
             font-size: 42px;
             font-weight: 700;
-
             color: #3a2f2a;
-
             margin-bottom: 20px;
         }
 
         .home-about-text {
             max-width: 800px;
-
             color: #6b5b4f;
-
             font-size: 18px;
             line-height: 1.8;
         }
 
-        /* CTA */
+        /* =========================
+           CTA
+        ========================= */
+
         .cta {
             margin: 70px 0;
-
-            background: linear-gradient(
-                    135deg,
-                    #3a2f2a,
-                    #5a4a42
-            );
-
+            background: linear-gradient(135deg, #3a2f2a, #5a4a42);
             border-radius: 28px;
-
             padding: 70px 50px;
-
             text-align: center;
         }
 
         .cta-title {
             color: white;
-
             font-size: 44px;
             font-weight: 700;
-
             margin-bottom: 20px;
         }
 
         .cta-text {
             color: #e9ddd0;
-
             font-size: 18px;
             line-height: 1.7;
-
             max-width: 700px;
             margin: 0 auto 35px;
         }
 
         .cta-btn {
             display: inline-block;
-
             background: white;
             color: #3a2f2a;
-
             padding: 16px 34px;
-
             border-radius: 14px;
-
             text-decoration: none;
-
             font-size: 17px;
             font-weight: 700;
-
             transition: 0.2s;
         }
 
@@ -251,7 +187,9 @@
             background: #f3e9dc;
         }
 
-        /* REVIEWS */
+        /* =========================
+           REVIEWS
+        ========================= */
 
         .reviews {
             margin-top: 70px;
@@ -272,9 +210,8 @@
 
         .reviews-grid {
             flex: 1;
-
             display: grid;
-            grid-template-columns:repeat(3, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 25px;
         }
 
@@ -301,24 +238,9 @@
             line-height: 1.7;
         }
 
-        .reviews-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-
-        .reviews-header h2 {
-            margin: 0;
-            color: #3a2f2a;
-            font-size: 36px;
-            font-weight: 700;
-        }
-
         .reviews-arrow {
             width: 60px;
             height: 60px;
-
             min-width: 60px;
 
             display: flex;
@@ -326,22 +248,22 @@
             justify-content: center;
 
             border-radius: 50%;
-
             background: #3a2f2a;
             color: white;
 
             text-decoration: none;
-
             font-size: 30px;
-            font-weight: 700;
-
-            transition: .2s;
+            transition: 0.2s;
         }
 
         .reviews-arrow:hover {
             background: #241d19;
             transform: translateX(4px);
         }
+
+        /* =========================
+           RECOMMENDED
+        ========================= */
 
         .recommended {
             margin-top: 60px;
@@ -354,23 +276,20 @@
             margin-bottom: 25px;
         }
 
-        /* wrapper: cards + arrow */
         .recommended-wrapper {
             display: flex;
             align-items: stretch;
             gap: 25px;
         }
 
-        /* grid of cards */
         .recommended-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 25px;
         }
 
-        /* card (как у тебя в каталоге) */
+        /* product */
         .product-card {
-            width: 100%;
             background: #fff;
             border: 1px solid #ece6df;
             border-radius: 24px;
@@ -379,7 +298,6 @@
             flex-direction: column;
         }
 
-        /* image */
         .product-image {
             height: 320px;
             background: #f7f1eb;
@@ -394,7 +312,6 @@
             object-fit: contain;
         }
 
-        /* content */
         .product-content {
             padding: 18px;
             display: flex;
@@ -423,7 +340,6 @@
             margin-bottom: 15px;
         }
 
-        /* button */
         .product-btn {
             display: flex;
             align-items: center;
@@ -436,7 +352,7 @@
             font-weight: 700;
         }
 
-        /* arrow container */
+        /* arrow */
         .recommended-arrow {
             width: 70px;
             display: flex;
@@ -444,7 +360,6 @@
             justify-content: center;
         }
 
-        /* arrow button */
         .arrow-btn {
             width: 60px;
             height: 60px;
@@ -456,7 +371,7 @@
             justify-content: center;
             text-decoration: none;
             font-size: 30px;
-            transition: .2s;
+            transition: 0.2s;
         }
 
         .arrow-btn:hover {
@@ -464,26 +379,25 @@
             transform: translateX(4px);
         }
 
+        /* =========================
+           RESPONSIVE
+        ========================= */
 
-        @media (max-width: 1400px) {
-            .recommended-grid {
-                grid-template-columns: repeat(4, 1fr);
+        @media (max-width: 900px) {
+
+            .hero {
+                padding: 70px 25px;
+                text-align: center;
             }
-        }
 
-        @media (max-width: 1100px) {
-            .recommended-grid {
-                grid-template-columns: repeat(3, 1fr);
+            .hero-content {
+                margin: 0 auto;
             }
-        }
 
-        @media (max-width: 800px) {
-            .recommended-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .reviews-grid {
+                grid-template-columns: 1fr;
             }
-        }
 
-        @media (max-width: 500px) {
             .recommended-grid {
                 grid-template-columns: 1fr;
             }
@@ -493,10 +407,16 @@
     <!-- HERO -->
     <section class="hero">
 
+        <div class="hero-overlay"></div>
+
         <div class="hero-content">
 
+            <div class="hero-badge">
+                Rabiko · newborn clothing
+            </div>
+
             <div class="hero-title">
-                Одежда для малышей
+                Одежда для малышей<br>
                 с любовью и заботой
             </div>
 
@@ -510,35 +430,21 @@
 
             <div class="hero-buttons">
 
-                <a href="/catalog/"
-                   class="hero-btn hero-btn-primary">
-
+                <a href="/catalog/" class="hero-btn hero-btn-primary">
                     Перейти в каталог
-
                 </a>
 
-                <a href="/about/"
-                   class="hero-btn hero-btn-secondary">
-
+                <a href="/about/" class="hero-btn hero-btn-secondary">
                     О бренде
-
                 </a>
 
             </div>
 
         </div>
 
-        <div class="hero-images">
-
-            <img src="{% static 'images/index.png' %}"
-                 alt="Rabiko">
-
-            <img src="{% static 'images/index2.jpg' %}"
-                 alt="Rabiko">
-
-        </div>
-
     </section>
+
+
     <!-- RECOMMENDED -->
     <section class="recommended">
 
