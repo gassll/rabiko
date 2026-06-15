@@ -5,7 +5,6 @@
 {% block content %}
 
 <style>
-/* форма по центру */
 .auth-wrapper {
     min-height: 70vh;
     display: flex;
@@ -14,7 +13,6 @@
     padding: 40px 20px;
 }
 
-/* карточка */
 .auth-card {
     background: white;
     padding: 50px 45px;
@@ -36,7 +34,6 @@
     }
 }
 
-/* заголовок */
 .auth-card h2 {
     text-align: center;
     margin-bottom: 10px;
@@ -52,7 +49,6 @@
     font-size: 15px;
 }
 
-/* поля */
 .form-group {
     margin-bottom: 25px;
 }
@@ -82,7 +78,23 @@
     box-shadow: 0 0 0 4px rgba(160, 124, 90, 0.1);
 }
 
-/* кнопка */
+/* Подсказки скрыты по умолчанию */
+.helptext {
+    display: none;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #8b7355;
+    line-height: 1.4;
+    padding: 8px 12px;
+    background: #f9f6f2;
+    border-radius: 10px;
+}
+
+/* Показываем подсказку только когда поле активно */
+.form-group input:focus + .helptext {
+    display: block;
+}
+
 .btn-login {
     width: 100%;
     padding: 14px 18px;
@@ -95,7 +107,6 @@
     cursor: pointer;
     transition: all 0.3s;
     margin-top: 5px;
-    display: block;
     box-sizing: border-box;
 }
 
@@ -105,11 +116,6 @@
     box-shadow: 0 8px 20px rgba(160, 124, 90, 0.3);
 }
 
-.btn-login:active {
-    transform: translateY(0);
-}
-
-/* ссылка */
 .register-link {
     text-align: center;
     margin-top: 30px;
@@ -125,10 +131,8 @@
 
 .register-link a:hover {
     text-decoration: underline;
-    color: #7a5a40;
 }
 
-/* ошибки */
 .errorlist {
     list-style: none;
     margin-top: 8px;
@@ -149,34 +153,14 @@
     margin-bottom: 25px;
     font-size: 14px;
 }
-
-/* подсказки - красивые */
-.helptext {
-    display: block;
-    font-size: 12px;
-    color: #8b7355;
-    margin-top: 8px;
-    padding: 8px 12px;
-    background: #f9f6f2;
-    border-radius: 10px;
-    line-height: 1.4;
-}
-
-/* список в подсказках */
-.helptext ul {
-    margin: 5px 0 0 0;
-    padding-left: 20px;
-}
-
-.helptext li {
-    margin: 3px 0;
-}
 </style>
 
 <div class="auth-wrapper">
     <div class="auth-card">
         <h2>Создать аккаунт</h2>
-        <div class="subtitle">Зарегистрируйтесь чтобы продолжить</div>
+        <div class="subtitle">
+            Зарегистрируйтесь, чтобы продолжить
+        </div>
 
         <form method="post">
             {% csrf_token %}
@@ -187,9 +171,22 @@
                 </div>
             {% endif %}
 
+            <!-- Имя пользователя -->
             <div class="form-group">
                 <label for="id_username">Имя пользователя</label>
-                <input type="text" name="username" id="id_username" class="form-control" autofocus required>
+
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    autofocus
+                    required
+                >
+
+                <span class="helptext">
+                    Буквы, цифры и символы @ . + - _
+                </span>
+
                 {% if form.username.errors %}
                     <ul class="errorlist">
                         {% for error in form.username.errors %}
@@ -197,15 +194,19 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
-                <span class="helptext">
-                    Обязательное поле. Не более 150 символов.<br>
-                    Можно использовать буквы, цифры и символы @/./+/-/_
-                </span>
             </div>
 
+            <!-- Email -->
             <div class="form-group">
                 <label for="id_email">Email</label>
-                <input type="email" name="email" id="id_email" class="form-control" required>
+
+                <input
+                    type="email"
+                    name="email"
+                    id="id_email"
+                    required
+                >
+
                 {% if form.email.errors %}
                     <ul class="errorlist">
                         {% for error in form.email.errors %}
@@ -215,9 +216,21 @@
                 {% endif %}
             </div>
 
+            <!-- Пароль -->
             <div class="form-group">
                 <label for="id_password1">Пароль</label>
-                <input type="password" name="password1" id="id_password1" class="form-control" required>
+
+                <input
+                    type="password"
+                    name="password1"
+                    id="id_password1"
+                    required
+                >
+
+                <span class="helptext">
+                    Минимум 8 символов, не только цифры.
+                </span>
+
                 {% if form.password1.errors %}
                     <ul class="errorlist">
                         {% for error in form.password1.errors %}
@@ -225,16 +238,23 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
-                <span class="helptext">
-                    Пароль должен содержать не менее 8 символов<br>
-                    Не должен быть слишком простым или распространенным<br>
-                    Не может состоять только из цифр
-                </span>
             </div>
 
+            <!-- Повтор пароля -->
             <div class="form-group">
                 <label for="id_password2">Подтверждение пароля</label>
-                <input type="password" name="password2" id="id_password2" class="form-control" required>
+
+                <input
+                    type="password"
+                    name="password2"
+                    id="id_password2"
+                    required
+                >
+
+                <span class="helptext">
+                    Повторите введённый пароль.
+                </span>
+
                 {% if form.password2.errors %}
                     <ul class="errorlist">
                         {% for error in form.password2.errors %}
@@ -242,7 +262,6 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
-                <span class="helptext">Введите тот же пароль, что и выше, для подтверждения</span>
             </div>
 
             <button type="submit" class="btn-login">
@@ -251,7 +270,8 @@
         </form>
 
         <div class="register-link">
-            Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+            Уже есть аккаунт?
+            <a href="{% url 'login' %}">Войти</a>
         </div>
     </div>
 </div>

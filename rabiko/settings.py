@@ -17,12 +17,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rabiko',
     'catalog',
-    'users',
     'orders',
     'cart',
     'rest_framework',
     "favorites",
     "reviews",
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -101,3 +101,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = "/users/login/"
 LOGIN_REDIRECT_URL = "/"
+
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = False
+
+CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SECURE = False

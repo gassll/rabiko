@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}
+Редактирование товара
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-wrap{
+    max-width:900px;
+    margin:40px auto;
+}
+
+.form-card{
+    background:#f7f1eb;
+    padding:35px;
+    border-radius:24px;
+}
+
+.page-title{
+    font-size:42px;
+    font-weight:700;
+    color:#3a2f2a;
+    margin-bottom:25px;
+}
+
+.preview{
+    margin-bottom:25px;
+}
+
+.preview img{
+    max-width:220px;
+    border-radius:20px;
+}
+
+.actions{
+    display:flex;
+    gap:15px;
+    margin-top:30px;
+}
+
+.btn-main{
+    border:none;
+    background:#6b4f3a;
+    color:white;
+    padding:14px 25px;
+    border-radius:14px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.btn-main:hover{
+    background:#4f3929;
+}
+
+.btn-delete{
+    background:#d9534f;
+    color:white;
+    text-decoration:none;
+    padding:14px 25px;
+    border-radius:14px;
+    font-weight:700;
+}
+
+.btn-delete:hover{
+    background:#c9302c;
+}
+
+.btn-back{
+    text-decoration:none;
+    background:#ddd;
+    color:#333;
+    padding:14px 25px;
+    border-radius:14px;
+    font-weight:700;
+}
+
+</style>
+
+<div class="page-wrap">
+
+    <h1 class="page-title">
+        Редактирование товара
+    </h1>
+
+    <div class="form-card">
+
+        {% if product.image %}
+            <div class="preview">
+                <img src="{{ product.image.url }}">
+            </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="actions">
+
+                <button type="submit" class="btn-main">
+                    Сохранить изменения
+                </button>
+
+                <a href="{% url 'catalog' %}" class="btn-back">
+                    Назад
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

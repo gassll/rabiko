@@ -7,6 +7,11 @@
     align-items: center;
 
     border-radius: 10px;
+
+    flex-wrap: wrap;
+    gap: 15px;
+    position: relative;
+
 }
 
 /* logo */
@@ -18,7 +23,8 @@
 .nav {
     display: flex;
     align-items: center;
-    gap: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 /* links */
@@ -133,6 +139,8 @@
     overflow: hidden;
 
     width: 320px;
+
+    flex-shrink: 0;
 }
 
 /* input */
@@ -214,10 +222,51 @@
     font-size: 16px;
     font-weight: 600;
 
-    box-shadow: 0 10px 25px rgba(0,0,0,.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
 
     animation: showMessage .3s ease;
 }
+
+.left-side {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* burger hidden on desktop */
+.burger {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* mobile menu */
+.mobile-nav {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+
+    background: #efe6da;
+    padding: 15px;
+    z-index: 999;
+}
+
+.mobile-nav a {
+    text-decoration: none;
+    color: #3a2f2a;
+    font-weight: 600;
+    padding: 10px;
+}
+
+.mobile-nav.active {
+    display: flex;
+}
+
 
 @keyframes showMessage {
     from {
@@ -228,4 +277,65 @@
         opacity: 1;
         transform: translateX(0);
     }
+}
+
+@media (max-width: 1730px) {
+    .header-search {
+        width: 340px;
+    }
+
+    .logo img {
+        height: 70px;
+    }
+
+    .icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .icon img {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+@media (max-width: 1024px) {
+
+    .nav {
+        display: none;
+    }
+
+    .burger {
+        display: block;
+    }
+
+    .header {
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .left-side {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .header-search {
+        flex: 1;
+        min-width: 200px;
+        order: 3;
+    }
+
+    .icons {
+        order: 2;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .header-search {
+        width: 300px;
+    }
+
 }

@@ -2,108 +2,64 @@
 
 <header class="header">
 
-    <!-- logo -->
-    <a href="/" class="logo">
-        <img src="{% static 'media/../../static/images/../../static/icons/logo.png' %}" alt="logo">
-    </a>
-
-    <!-- nav -->
-    <nav class="nav">
-
-        <a href="/"
-           class="{% if request.path == '/' %}active{% endif %}">
-            Главная
+    <div class="left-side">
+        <a href="/" class="logo">
+            <img src="{% static 'icons/logo.png' %}" alt="logo">
         </a>
 
-        <a href="/catalog/"
-           class="{% if '/catalog/' in request.path %}active{% endif %}">
-            Каталог
-        </a>
+        <div class="burger" id="burger">☰</div>
+    </div>
 
-        <a href="/about/"
-           class="{% if '/about/' in request.path %}active{% endif %}">
-            О нас
-        </a>
-
-        <a href="/reviews/"
-           class="{% if '/reviews/' in request.path %}active{% endif %}">
-            Отзывы
-        </a>
-
+    <nav class="nav" id="navMenu">
+        <a href="/" class="{% if request.path == '/' %}active{% endif %}">Главная</a>
+        <a href="/catalog/" class="{% if '/catalog/' in request.path %}active{% endif %}">Каталог</a>
+        <a href="/about/" class="{% if '/about/' in request.path %}active{% endif %}">О нас</a>
+        <a href="/reviews/" class="{% if '/reviews/' in request.path %}active{% endif %}">Отзывы</a>
     </nav>
 
-    <!-- SEARCH -->
     <form action="/catalog/" method="GET" class="header-search" id="searchForm">
-
-        <input
-                type="text"
-                name="q"
-                id="searchInput"
-                placeholder="Поиск товаров..."
-                value="{{ request.GET.q }}"
-        >
-
-        <!-- крестик -->
+        <input type="text" name="q" id="searchInput" placeholder="Поиск товаров..." value="{{ request.GET.q }}">
         <button type="button" class="clear-search" id="clearSearch">✕</button>
-
-        <!-- поиск -->
         <button type="submit">
             <img src="{% static 'icons/search.svg' %}" alt="search">
         </button>
-
     </form>
 
-    <!-- icons -->
     <div class="icons">
-
         <a href="{% url 'favorites' %}" class="icon">
-            <img src="{% static 'icons/heart.svg' %}" alt="favorites">
-
-            <span class="badge">
-                {{ favorites_count }}
-            </span>
-
+            <img src="{% static 'icons/heart.svg' %}">
+            <span class="badge badge-favorites">{{ favorites_count }}</span>
         </a>
 
-        <a href="/cart/" class="icon cart-icon">
-
-            <img src="{% static 'media/../../static/images/../../static/icons/cart.svg' %}" alt="cart">
-
-            <span class="badge">
-                {{ cart_count }}
-            </span>
-
+        <a href="/cart/" class="icon">
+            <img src="{% static 'icons/cart.svg' %}">
+            <span class="badge badge-cart">{{ cart_count }}</span>
         </a>
 
-        {% if user.is_authenticated %}
-
-            <a href="{% url 'profile' %}" class="icon">
-                <img src="{% static 'media/../../static/images/../../static/icons/profile.svg' %}" alt="profile">
-            </a>
-
-        {% else %}
-
-            <a href="{% url 'login' %}" class="icon">
-                <img src="{% static 'media/../../static/images/../../static/icons/profile.svg' %}" alt="login">
-            </a>
-
-        {% endif %}
-
+        <a href="{% url 'profile' %}" class="icon">
+            <img src="{% static 'icons/profile.svg' %}">
+        </a>
     </div>
 
 </header>
 
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobileNav">
+
+    <a href="/">Главная</a>
+    <a href="/catalog/">Каталог</a>
+    <a href="/about/">О нас</a>
+    <a href="/reviews/">Отзывы</a>
+
+</nav>
+
 <script>
+    /* SEARCH */
     const input = document.getElementById("searchInput");
     const clearBtn = document.getElementById("clearSearch");
-    const form = document.getElementById("searchForm");
 
     function toggleClear() {
-        if (input.value.length > 0) {
-            clearBtn.style.display = "block";
-        } else {
-            clearBtn.style.display = "none";
-        }
+        clearBtn.style.display = input.value.length > 0 ? "block" : "none";
     }
 
     input.addEventListener("input", toggleClear);
@@ -111,9 +67,16 @@
     clearBtn.addEventListener("click", () => {
         input.value = "";
         toggleClear();
-
         window.location.href = "/catalog/";
     });
 
     toggleClear();
+
+    /* BURGER */
+    const burger = document.getElementById("burger");
+    const mobileNav = document.getElementById("mobileNav");
+
+    burger.addEventListener("click", () => {
+        mobileNav.classList.toggle("active");
+    });
 </script>

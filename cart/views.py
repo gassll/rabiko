@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from catalog.models import ProductVariant
 from django.http import JsonResponse
 
@@ -6,20 +6,20 @@ from django.http import JsonResponse
 class CartService:
     def __init__(self, request):
         self.session = request.session
-        self.refresh()
-
-    def refresh(self):
         self.cart = self.session.get("cart", {})
 
+    def save(self):
+        self.session["cart"] = self.cart
+        self.session.modified = True
+        self.session.save()
+
     def add(self, variant_id, quantity=1):
-        self.refresh()
         variant_id = str(variant_id)
 
         self.cart[variant_id] = self.cart.get(variant_id, 0) + quantity
         self.save()
 
     def decrease(self, variant_id):
-        self.refresh()
         variant_id = str(variant_id)
 
         if variant_id in self.cart:
@@ -31,7 +31,6 @@ class CartService:
         self.save()
 
     def remove(self, variant_id):
-        self.refresh()
         variant_id = str(variant_id)
 
         if variant_id in self.cart:
@@ -40,16 +39,11 @@ class CartService:
         self.save()
 
     def clear(self):
-        self.session["cart"] = {}
-        self.session.modified = True
         self.cart = {}
+        self.save()
 
     def items(self):
-        self.refresh()
-
-        variants = ProductVariant.objects.filter(
-            id__in=self.cart.keys()
-        )
+        variants = ProductVariant.objects.filter(id__in=self.cart.keys())
 
         items = []
         total = 0
@@ -69,9 +63,8 @@ class CartService:
 
         return items, total
 
-    def save(self):
-        self.session["cart"] = self.cart
-        self.session.modified = True
+    def get_count(self):
+        return sum(self.cart.values())
 
 
 # ----------------- VIEWS -----------------
@@ -80,11 +73,9 @@ def add_to_cart(request, variant_id):
     cart = CartService(request)
     cart.add(variant_id)
 
-    _, total = cart.items()
-
     return JsonResponse({
-        "count": sum(cart.cart.values()),
-        "total": total
+        "qty": cart.cart.get(str(variant_id), 0),
+        "count": cart.get_count()
     })
 
 
@@ -92,11 +83,9 @@ def decrease_quantity(request, variant_id):
     cart = CartService(request)
     cart.decrease(variant_id)
 
-    _, total = cart.items()
-
     return JsonResponse({
-        "count": sum(cart.cart.values()),
-        "total": total
+        "qty": cart.cart.get(str(variant_id), 0),
+        "count": cart.get_count()
     })
 
 
@@ -105,7 +94,7 @@ def remove_from_cart(request, variant_id):
     cart.remove(variant_id)
 
     return JsonResponse({
-        "count": sum(request.session.get("cart", {}).values())
+        "count": cart.get_count()
     })
 
 
@@ -122,11 +111,14 @@ def cart_detail(request):
     cart = CartService(request)
     items, total = cart.items()
 
-    return render(
-        request,
-        "cart/cart_detail.html",
-        {
-            "items": items,
-            "total": total,
-        }
-    )
+    return render(request, "cart/cart_detail.html", {
+        "items": items,
+        "total": total,
+    })
+
+
+def cart_count(request):
+    cart = CartService(request)
+    return JsonResponse({
+        "count": cart.get_count()
+    })

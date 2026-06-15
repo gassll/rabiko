@@ -236,7 +236,7 @@
 
             width: 100%;
             max-width: 320px;
-            height: 58px; /* фиксируем размер как у buy-btn */
+            height: 58px;
 
             padding: 0 14px;
 
@@ -254,7 +254,7 @@
             background: #6b4f3a;
             color: white;
 
-            font-size: 26px; /* сделали крупнее */
+            font-size: 26px;
             font-weight: 700;
 
             cursor: pointer;
@@ -354,7 +354,7 @@
             <h1>{{ product.name }}</h1>
 
             <div class="price">
-                {{ product.price }} ₽
+                {{ product.price|floatformat:0 }} ₽
             </div>
 
             <div class="description">
@@ -368,7 +368,8 @@
                 <select id="variantSelect" name="variant_id">
 
                     {% for variant in variants %}
-                        <option value="{{ variant.id }}">
+                        <option value="{{ variant.id }}"
+                                {% if selected_variant and selected_variant.id == variant.id %}selected{% endif %}>
                             {{ variant.size.name }}
                         </option>
                     {% endfor %}
@@ -376,11 +377,17 @@
                 </select>
 
                 <div id="cartArea">
-
-                    <button id="cartBtn" class="buy-btn">
-                        Добавить в корзину
-                    </button>
-
+                    {% if variant_in_cart %}
+                        <div class="qty-box">
+                            <button type="button" class="qty-btn minus">−</button>
+                            <span class="qty-value">{{ qty }}</span>
+                            <button type="button" class="qty-btn plus">+</button>
+                        </div>
+                    {% else %}
+                        <button id="cartBtn" class="buy-btn">
+                            Добавить в корзину
+                        </button>
+                    {% endif %}
                 </div>
 
             </form>
@@ -408,7 +415,7 @@
                         <h3>{{ item.name }}</h3>
 
                         <div class="related-price">
-                            {{ item.price }} ₽
+                            {{ item.price  }} ₽
                         </div>
 
                         <a
@@ -430,70 +437,147 @@
     <script>
 
         const cartArea = document.getElementById("cartArea");
+        const variantSelect = document.getElementById("variantSelect");
 
-        document.getElementById("cartBtn")
-            .addEventListener("click", function (e) {
+
+        /* =========================
+           🔥 RENDER: ADD BUTTON
+        ========================= */
+        function renderAddButton() {
+
+            cartArea.innerHTML = `
+        <button id="cartBtn" class="buy-btn">
+            Добавить в корзину
+        </button>
+    `;
+
+            attachCartButton();
+        }
+
+
+        /* =========================
+           🔥 RENDER: QTY BOX
+        ========================= */
+        function renderQtyBox(qty, variantId) {
+
+            cartArea.innerHTML = `
+        <div class="qty-box">
+            <button type="button" class="qty-btn minus">−</button>
+            <span class="qty-value">${qty}</span>
+            <button type="button" class="qty-btn plus">+</button>
+        </div>
+    `;
+
+            attachQtyButtons(variantId);
+        }
+
+
+        /* =========================
+           🔥 ADD TO CART
+        ========================= */
+        function attachCartButton() {
+
+            const btn = document.getElementById("cartBtn");
+
+            if (!btn) return;
+
+            btn.addEventListener("click", function (e) {
                 e.preventDefault();
 
-                const variantId = document.getElementById("variantSelect").value;
+                const variantId = variantSelect.value;
 
                 fetch("/cart/add/" + variantId + "/")
-                    .then(() => {
+                    .then(res => res.json())
+                    .then(data => {
 
-                        let qty = 1;
+                        updateCartBadge(data.count);
 
-                        cartArea.innerHTML = `
-          <div class="qty-box">
-
-            <button type="button" class="qty-btn minus">−</button>
-
-            <span class="qty-value">1</span>
-
-            <button type="button" class="qty-btn plus">+</button>
-
-          </div>
-        `;
-
-                        const value = cartArea.querySelector(".qty-value");
-
-                        const plusBtn = cartArea.querySelector(".plus");
-                        const minusBtn = cartArea.querySelector(".minus");
-
-                        plusBtn.addEventListener("click", function () {
-                            qty++;
-                            value.textContent = qty;
-
-                            fetch("/cart/add/" + variantId + "/");
-                        });
-
-                        minusBtn.addEventListener("click", function () {
-                            if (qty > 1) {
-                                qty--;
-                                value.textContent = qty;
-
-                                fetch("/cart/remove/" + variantId + "/");
-                            } else {
-                                cartArea.innerHTML = `
-              <button id="cartBtn" class="buy-btn">
-                Добавить в корзину
-              </button>
-            `;
-
-                                attachCartButton();
-                            }
-                        });
+                        renderQtyBox(data.qty, variantId);
 
                     });
+            });
+        }
 
+
+        /* =========================
+           🔥 + / -
+        ========================= */
+        function attachQtyButtons(variantId) {
+
+            const plusBtn = document.querySelector(".plus");
+            const minusBtn = document.querySelector(".minus");
+            const value = document.querySelector(".qty-value");
+
+            if (!plusBtn || !minusBtn || !value) return;
+
+            const id = variantId || variantSelect.value;
+
+            plusBtn.addEventListener("click", function () {
+
+                fetch("/cart/add/" + id + "/")
+                    .then(res => res.json())
+                    .then(data => {
+
+                        value.textContent = data.qty;
+                        updateCartBadge(data.count);
+
+                    });
             });
 
-        function attachCartButton() {
-            document.getElementById("cartBtn")
-                .addEventListener("click", function (e) {
-                    e.preventDefault();
-                    location.reload();
+            minusBtn.addEventListener("click", function () {
+
+                fetch("/cart/decrease/" + id + "/")
+                    .then(res => res.json())
+                    .then(data => {
+
+                        updateCartBadge(data.count);
+
+                        if (data.qty > 0) {
+                            value.textContent = data.qty;
+                        } else {
+                            renderAddButton();
+                        }
+
+                    });
+            });
+        }
+
+
+        /* =========================
+           🔥 CHECK CART STATUS
+        ========================= */
+        function initVariantState() {
+
+            const variantId = variantSelect.value;
+
+            fetch("/cart/status/" + variantId + "/")
+                .then(res => res.json())
+                .then(data => {
+
+                    if (data.qty > 0) {
+                        renderQtyBox(data.qty, variantId);
+                    } else {
+                        renderAddButton();
+                    }
+
                 });
         }
+
+
+        /* =========================
+           🔥 CHANGE SIZE
+        ========================= */
+        variantSelect.addEventListener("change", function () {
+
+            initVariantState();
+
+        });
+
+
+        /* =========================
+           🔥 INIT ON PAGE LOAD
+        ========================= */
+        initVariantState();
 
     </script>
 

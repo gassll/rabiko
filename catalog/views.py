@@ -5,7 +5,7 @@ from .models import Product, ProductVariant, Category, Favorite
 from django.contrib import messages
 from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models import Q
-
+from django.http import JsonResponse
 
 # ГЛАВНАЯ
 def home(request):
@@ -105,24 +105,46 @@ def product_detail(request, pk):
 
     variants = product.variants.all()
 
+    # 👇 ВОТ СЮДА
+    if not variants.exists():
+        return render(request, "catalog/product_detail.html", {
+            "product": product,
+            "variants": [],
+            "selected_variant": None,
+            "qty": 0,
+            "variant_in_cart": False,
+            "related_products": Product.objects.filter(
+                category=product.category
+            ).exclude(id=product.id)[:4],
+        })
+
+    cart = request.session.get("cart", {})
+
+    selected_variant = variants.first()
+
+    qty = cart.get(str(selected_variant.id), 0)
+
     related_products = Product.objects.filter(
         category=product.category
-    ).exclude(
-        id=product.id
-    )[:4]
+    ).exclude(id=product.id)[:4]
 
-    back_url = request.META.get("HTTP_REFERER")
+    return render(request, "catalog/product_detail.html", {
+        "product": product,
+        "variants": variants,
+        "selected_variant": selected_variant,
+        "qty": qty,
+        "variant_in_cart": qty > 0,
+        "related_products": related_products,
+    })
 
-    return render(
-        request,
-        "catalog/product_detail.html",
-        {
-            "product": product,
-            "variants": variants,
-            "related_products": related_products,
-            "back_url": back_url,
-        }
-    )
+def cart_status(request, variant_id):
+    cart = request.session.get("cart", {})
+
+    qty = cart.get(str(variant_id), 0)
+
+    return JsonResponse({
+        "qty": qty
+    })
 
 
 # ABOUT

@@ -16,6 +16,12 @@ class OrderAdmin(admin.ModelAdmin):
         "status",
     )
 
+    list_filter = (
+        "status",
+        "user",
+        "created_at",
+    )
+
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
@@ -25,4 +31,9 @@ class OrderItemAdmin(admin.ModelAdmin):
         "product_variant",
         "quantity",
         "price",
+    )
+
+    list_filter = (
+        "order",
+        "product_variant",
     )

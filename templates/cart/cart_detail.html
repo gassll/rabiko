@@ -84,7 +84,7 @@
             text-align: center;
         }
 
-        .remove-link {
+        .remove-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -95,12 +95,15 @@
             border-radius: 999px;
 
             color: #e53935;
-            text-decoration: none;
+            background: transparent;
+
+            font-size: 14px;
+            cursor: pointer;
 
             transition: .2s;
         }
 
-        .remove-link:hover {
+        .remove-btn:hover {
             background: #e53935;
             color: white;
         }
@@ -117,7 +120,7 @@
             font-size: 42px;
         }
 
-        .empty-cart{
+        .empty-cart {
             font-size: 18px;
         }
 
@@ -171,7 +174,7 @@
 
             {% for item in items %}
 
-                <div class="cart-item">
+                <div class="cart-item" data-variant-id="{{ item.variant.id }}">
 
                     <img
                             src="{{ item.variant.product.image.url }}"
@@ -184,7 +187,7 @@
                         <h3>{{ item.variant }}</h3>
 
                         <div class="cart-price">
-                            {{ item.quantity }} × {{ item.price }} ₽
+                            {{ item.quantity }} × {{ item.price|floatformat:0  }} ₽
                         </div>
 
                         <div class="cart-controls">
@@ -192,15 +195,14 @@
                             <button class="qty-btn minus" data-id="{{ item.variant.id }}">−</button>
 
                             <span class="qty-value" id="qty-{{ item.variant.id }}">
-    {{ item.quantity }}
-</span>
+                                {{ item.quantity }}
+                            </span>
 
                             <button class="qty-btn plus" data-id="{{ item.variant.id }}">+</button>
 
-                            <a href="{% url 'remove_from_cart' item.variant.id %}"
-                               class="remove-link">
+                            <button class="remove-btn" data-variant-id="{{ item.variant.id }}">
                                 Удалить
-                            </a>
+                            </button>
 
                         </div>
 
@@ -231,17 +233,13 @@
         {% endif %}
 
     </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
 
             function updateBadge(count) {
                 const badge = document.querySelector(".badge");
                 if (badge) badge.textContent = count;
-            }
-
-            function updateTotal(total) {
-                const el = document.querySelector(".cart-footer h2");
-                if (el) el.textContent = `Итого: ${total} ₽`;
             }
 
             document.querySelectorAll(".plus").forEach(btn => {
@@ -251,11 +249,11 @@
                     const res = await fetch(`/cart/add/${id}/`);
                     const data = await res.json();
 
-                    updateBadge(data.count);
-                    updateTotal(data.total);
+                    updateCartBadge(data.count);
 
+                    // 💥 ВАЖНО: берём СЕРВЕРНОЕ значение
                     const qtyEl = document.getElementById(`qty-${id}`);
-                    qtyEl.textContent = parseInt(qtyEl.textContent) + 1;
+                    qtyEl.textContent = data.qty;
                 });
             });
 
@@ -267,17 +265,33 @@
                     const data = await res.json();
 
                     updateBadge(data.count);
-                    updateTotal(data.total);
 
                     const qtyEl = document.getElementById(`qty-${id}`);
-                    let current = parseInt(qtyEl.textContent);
 
-                    if (current <= 1 || data.count === 0) {
-                        location.reload(); // или лучше удалить DOM элемент
+                    if (data.qty <= 0) {
+                        btn.closest(".cart-item").remove();
                         return;
                     }
 
-                    qtyEl.textContent = current - 1;
+                    // 💥 тоже серверное значение
+                    qtyEl.textContent = data.qty;
+                });
+            });
+
+            document.querySelectorAll(".remove-btn").forEach(btn => {
+                btn.addEventListener("click", async () => {
+                    const id = btn.dataset.variantId;
+
+                    const res = await fetch(`/cart/remove/${id}/`);
+                    const data = await res.json();
+
+                    updateBadge(data.count);
+
+                    btn.closest(".cart-item").remove();
+
+                    if (data.count === 0) {
+                        location.reload();
+                    }
                 });
             });
 

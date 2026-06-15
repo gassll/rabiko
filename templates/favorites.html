@@ -26,15 +26,11 @@
         .product-card {
             position: relative;
             width: 300px;
-
             background: #fff;
             border: 1px solid #ece6df;
             border-radius: 24px;
-
             overflow: hidden;
-
             transition: .2s;
-
             display: flex;
             flex-direction: column;
         }
@@ -53,11 +49,9 @@
         .product-image-wrapper {
             width: 100%;
             height: 350px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             background: #f7f1eb;
         }
 
@@ -69,11 +63,9 @@
 
         .product-content {
             padding: 18px;
-
             display: flex;
             flex-direction: column;
             flex-grow: 1;
-
             position: relative;
             z-index: 2;
         }
@@ -82,7 +74,6 @@
             font-size: 22px;
             font-weight: 700;
             color: #3a2f2a;
-
             margin-bottom: 12px;
         }
 
@@ -90,38 +81,7 @@
             font-size: 28px;
             font-weight: 700;
             color: #3a2f2a;
-
             margin-bottom: 15px;
-        }
-
-        .open-btn {
-            margin-top: auto;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            width: 100%;
-            height: 52px;
-
-            background: #6b4f3a;
-            color: white;
-
-            border-radius: 14px;
-
-            text-decoration: none;
-            font-weight: 700;
-
-            transition: .2s;
-        }
-
-        .open-btn:hover {
-            background: #4f3929;
-        }
-
-        .empty {
-            font-size: 18px;
-            color: #777;
         }
 
         .cart-area {
@@ -153,10 +113,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-
             width: 100%;
             height: 52px;
-
             background: #f7f1eb;
             border-radius: 14px;
             padding: 0 12px;
@@ -165,16 +123,12 @@
         .qty-btn {
             width: 40px;
             height: 40px;
-
             border: none;
             border-radius: 10px;
-
             background: #6b4f3a;
             color: white;
-
             font-size: 22px;
             font-weight: 700;
-
             cursor: pointer;
         }
 
@@ -188,32 +142,33 @@
             position: absolute;
             top: 12px;
             right: 12px;
-
             width: 40px;
             height: 40px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             background: rgba(255, 255, 255, 0.95);
             border-radius: 50%;
-
             font-size: 20px;
             color: #c0392b;
-
             text-decoration: none;
-
             z-index: 5;
-
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-
             transition: .2s;
         }
 
         .heart-btn:hover {
             transform: scale(1.1);
-            background: #fff;
+        }
+
+        .heart-btn.active {
+            color: red;
+            transform: scale(1.1);
+        }
+
+        .empty {
+            font-size: 18px;
+            color: #777;
         }
     </style>
 
@@ -231,7 +186,7 @@
 
                     <div class="product-card">
                         <a href="{% url 'toggle_favorite' favorite.product.id %}"
-                           class="heart-btn"
+                           class="heart-btn active"
                            title="Удалить из избранного">
                             ♥
                         </a>
@@ -284,32 +239,30 @@
 
     </div>
     <script>
-        function updateBadge(count) {
-            document.querySelector(".badge").textContent = count;
-        }
-
         document.querySelectorAll(".cart-area").forEach(area => {
 
             const id = area.dataset.id;
-            let qty = parseInt(area.dataset.qty || 0);
 
-            function render() {
-                if (qty === 0) {
+            function setView(qty) {
+
+                area.dataset.qty = qty;
+
+                if (qty <= 0) {
+
                     area.innerHTML = `
                 <button class="product-btn add-btn">В корзину</button>
             `;
 
-                    area.querySelector(".add-btn").addEventListener("click", () => {
-                        fetch("/cart/add/" + id + "/")
-                            .then(r => r.json())
-                            .then(data => {
-                                qty = 1;
-                                updateBadge(data.count);
-                                render();
-                            });
+                    area.querySelector(".add-btn").addEventListener("click", async () => {
+                        const res = await fetch("/cart/add/" + id + "/");
+                        const data = await res.json();
+
+                        updateCartBadge(data.count);
+                        setView(data.qty);
                     });
 
                 } else {
+
                     area.innerHTML = `
                 <div class="qty-box">
                     <button class="qty-btn minus">−</button>
@@ -318,29 +271,25 @@
                 </div>
             `;
 
-                    area.querySelector(".plus").addEventListener("click", () => {
-                        fetch("/cart/add/" + id + "/")
-                            .then(r => r.json())
-                            .then(data => {
-                                qty++;
-                                updateBadge(data.count);
-                                render();
-                            });
+                    area.querySelector(".plus").addEventListener("click", async () => {
+                        const res = await fetch("/cart/add/" + id + "/");
+                        const data = await res.json();
+
+                        updateCartBadge(data.count);
+                        setView(data.qty);
                     });
 
-                    area.querySelector(".minus").addEventListener("click", () => {
-                        fetch("/cart/decrease/" + id + "/")
-                            .then(r => r.json())
-                            .then(data => {
-                                qty = Math.max(0, qty - 1);
-                                updateBadge(data.count);
-                                render();
-                            });
+                    area.querySelector(".minus").addEventListener("click", async () => {
+                        const res = await fetch("/cart/decrease/" + id + "/");
+                        const data = await res.json();
+
+                        updateCartBadge(data.count);
+                        setView(data.qty);
                     });
                 }
             }
 
-            render();
+            setView(Number(area.dataset.qty || 0));
         });
     </script>
 {% endblock %}

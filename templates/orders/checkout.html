@@ -1,5 +1,5 @@
 {% extends "registration/../base.html" %}
-
+{% load catalog_tags %}
 {% block title %}
     Оформление заказа
 {% endblock %}
@@ -282,14 +282,14 @@
                         </div>
 
                         <div class="item-price">
-                            {{ item.sum }} ₽
+                            {{ item.sum|rub}}
                         </div>
 
                     </div>
                 {% endfor %}
 
                 <div class="total-box">
-                    Итого: {{ total }} ₽
+                    Итого: {{ total|rub }}
                 </div>
 
                 <hr class="divider">

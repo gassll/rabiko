@@ -15,5 +15,7 @@ urlpatterns = [
     path('about/', views.about_view, name='about'),
 
     # профиль
-    path("reviews/", views.reviews_view, name="reviews")
+    path("reviews/", views.reviews_view, name="reviews"),
+    path("cart/status/<int:variant_id>/", views.cart_status, name="cart_status"),
+
 ]

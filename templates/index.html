@@ -477,7 +477,7 @@
                             </div>
 
                             <div class="product-price">
-                                {{ product.price }} ₽
+                                {{ product.price|floatformat:0 }} ₽
                             </div>
 
                             <a href="{% url 'product_detail' product.id %}" class="product-btn">

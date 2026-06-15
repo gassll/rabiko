@@ -1,17 +1,38 @@
 from django.db import models
 from django.conf import settings
+from django.db.models import Q
+from slugify import slugify
+
 
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        base_slug = slugify(self.name)
+
+        if not self.slug or self.slug.startswith(base_slug):
+            self.slug = base_slug
+
+        counter = 1
+        while Category.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+            self.slug = f"{base_slug}-{counter}"
+            counter += 1
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("catalog") + f"?category={self.slug}"
 
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 
-    def __str__(self):
-        return self.name
 
 
 class Product(models.Model):
@@ -22,42 +43,53 @@ class Product(models.Model):
     )
 
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank=True)
 
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
 
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
-    image = models.ImageField(
-        upload_to='products/'
-    )
-
-    stock = models.PositiveIntegerField(default=0)
+    image = models.ImageField(upload_to='products/')
 
     is_available = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("product_detail", kwargs={"pk": self.pk})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name)
+            self.slug = base_slug
+
+            counter = 1
+            while Product.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+                self.slug = f"{base_slug}-{counter}"
+                counter += 1
+
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
 
-    def __str__(self):
-        return self.name
 
 
 class Size(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = "Размер"
         verbose_name_plural = "Размеры"
 
-    def __str__(self):
-        return self.name
 
 
 class ProductVariant(models.Model):
@@ -70,10 +102,13 @@ class ProductVariant(models.Model):
     size = models.ForeignKey(
         Size,
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
+        blank=True
     )
 
-    stock = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.size or 'no size'}"
 
     class Meta:
         verbose_name = "Вариант товара"
@@ -85,8 +120,6 @@ class ProductVariant(models.Model):
             )
         ]
 
-    def __str__(self):
-        return f'{self.product.name} - {self.size}'
 
 
 class Favorite(models.Model):
@@ -96,17 +129,21 @@ class Favorite(models.Model):
         related_name='favorites'
     )
 
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE
-    )
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Избранное"
         verbose_name_plural = "Избранные"
-        unique_together = ('user', 'product')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'product'],
+                name='unique_favorite'
+            )
+        ]
+
+
 
 
 class ProductImage(models.Model):
@@ -116,11 +153,19 @@ class ProductImage(models.Model):
         related_name='images'
     )
 
-    image = models.ImageField(
-        upload_to='products/'
-    )
+    image = models.ImageField(upload_to='products/')
 
     is_main = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['product'],
+                condition=Q(is_main=True),
+                name='unique_main_image_per_product'
+            )
+        ]
+
 
 
 class RecentlyViewed(models.Model):
@@ -129,9 +174,10 @@ class RecentlyViewed(models.Model):
         on_delete=models.CASCADE
     )
 
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE
-    )
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
-    viewed_at = models.DateTimeField(auto_now=True)
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Просмотр"
+        verbose_name_plural = "Недавние просмотры"
