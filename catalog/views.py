@@ -105,7 +105,6 @@ def product_detail(request, pk):
 
     variants = product.variants.all()
 
-    # 👇 ВОТ СЮДА
     if not variants.exists():
         return render(request, "catalog/product_detail.html", {
             "product": product,
