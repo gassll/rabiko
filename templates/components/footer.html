@@ -1,5 +1,38 @@
 {% load static %}
+<style>
+    @media (max-width: 1023px) {
 
+        .footer-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .footer-logo img {
+            width: 180px; /* подбери 180-220px */
+            height: auto;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-socials {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    }
+</style>
 <footer class="footer">
 
     <div class="footer-top">

@@ -233,6 +233,13 @@
             font-weight: 700;
             color: #3a2f2a;
         }
+
+        @media (min-width: 1400px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 300px);
+                justify-content: center;
+            }
+        }
     </style>
 
     <div class="catalog-page">
@@ -288,7 +295,7 @@
                                 </div>
 
                                 <div class="product-price">
-                                    {{ product.price|rub}}
+                                    {{ product.price|rub }}
                                 </div>
 
                             </div>

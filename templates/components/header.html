@@ -1,5 +1,37 @@
 {% load static %}
+<style>
+    .header {
+        position: relative;
+    }
 
+    .mobile-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        display: none;
+        background: #efe6da;
+        z-index: 9999;
+    }
+
+    .mobile-nav.active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    @media (max-width: 1023px) {
+
+        .header-search {
+            max-width: 250px;
+            width: 250px;
+        }
+
+        .header-search input {
+            font-size: 14px;
+            padding: 10px;
+        }
+    }
+</style>
 <header class="header">
 
     <div class="left-side">
@@ -40,18 +72,17 @@
             <img src="{% static 'icons/profile.svg' %}">
         </a>
     </div>
+    <!-- MOBILE NAV -->
+    <nav class="mobile-nav" id="mobileNav">
 
+        <a href="/">Главная</a>
+        <a href="/catalog/">Каталог</a>
+        <a href="/about/">О нас</a>
+        <a href="/reviews/">Отзывы</a>
+
+    </nav>
 </header>
 
-<!-- MOBILE NAV -->
-<nav class="mobile-nav" id="mobileNav">
-
-    <a href="/">Главная</a>
-    <a href="/catalog/">Каталог</a>
-    <a href="/about/">О нас</a>
-    <a href="/reviews/">Отзывы</a>
-
-</nav>
 
 <script>
     /* SEARCH */

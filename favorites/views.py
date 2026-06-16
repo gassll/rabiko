@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from catalog.models import Product, Favorite
 
 
-@login_required(login_url="/users/login/")
+@login_required
 def toggle_favorite(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
@@ -27,7 +27,7 @@ def toggle_favorite(request, product_id):
 
 from cart.views import CartService
 
-@login_required(login_url="/users/login/")
+@login_required
 def favorites_list(request):
     favorites = (
         Favorite.objects
