@@ -60,13 +60,49 @@
 
         .filter-btn {
             width: 100%;
+
+            height: 52px;
+
             border: none;
+            border-radius: 14px;
+
             background: #6b4f3a;
             color: white;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .filter-btn:hover {
+            background: #4f3929;
+            transform: translateY(-2px);
+        }
+
+        .reset-btn {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
             padding: 14px;
             border-radius: 12px;
-            cursor: pointer;
+
+            text-align: center;
+            text-decoration: none;
+
+            background: white;
+            border: 1px solid #d9c8b8;
+
+            color: #6b4f3a;
             font-weight: 600;
+
+            box-sizing: border-box;
+            transition: .2s;
+        }
+
+        .reset-btn:hover {
+            background: #efe6da;
         }
 
         .filter-btn:hover {
@@ -241,7 +277,11 @@
             }
         }
     </style>
-
+    <div class="breadcrumbs">
+        <a href="/">Главная</a>
+        <span>•</span>
+        Каталог
+    </div>
     <div class="catalog-page">
 
         <h1 class="catalog-title">Каталог товаров</h1>
@@ -266,6 +306,9 @@
                     <input type="number" name="max_price" placeholder="До" value="{{ request.GET.max_price }}">
 
                     <button class="filter-btn" type="submit">Применить</button>
+                    <a href="{% url 'catalog' %}" class="reset-btn">
+                        Сбросить фильтры
+                    </a>
                 </form>
             </aside>
 

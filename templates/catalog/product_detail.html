@@ -3,31 +3,7 @@
 {% block content %}
 
     <style>
-        .back-btn {
-            display: inline-block;
 
-            margin: 10px 0 30px 0;
-            padding: 12px 18px;
-
-            background: #efe6da;
-            border: 2px solid #3a2f2a;
-            border-radius: 12px;
-            align-self: flex-start;
-            width: fit-content;
-
-            color: #3a2f2a;
-            text-decoration: none;
-            font-weight: 600;
-
-            transition: .2s;
-        }
-
-        .back-btn:hover {
-            background: #3a2f2a;
-            color: white;
-
-            transform: translateY(-2px);
-        }
 
 
         .product-page {
@@ -311,15 +287,13 @@
 
     </style>
 
-    {% if back_url and "/favorites/" in back_url %}
-        <a href="{% url 'favorites' %}" class="back-btn">
-            ← Вернуться в избранное
-        </a>
-    {% else %}
-        <a href="{% url 'catalog' %}" class="back-btn">
-            ← Вернуться в каталог
-        </a>
-    {% endif %}
+    <div class="breadcrumbs">
+        <a href="/">Главная</a>
+        <span>•</span>
+        <a href="{% url 'catalog' %}">Каталог</a>
+        <span>•</span>
+        {{ product.name }}
+    </div>
 
     <div class="product-page">
 
@@ -415,7 +389,7 @@
                         <h3>{{ item.name }}</h3>
 
                         <div class="related-price">
-                            {{ item.price  }} ₽
+                            {{ item.price }} ₽
                         </div>
 
                         <a
