@@ -10,7 +10,14 @@ class Review(models.Model):
         choices=[(i, str(i)) for i in range(1, 6)]
     )
 
-    is_published = models.BooleanField(default=False)
+    is_published = models.BooleanField(
+        default=False,
+        verbose_name="Опубликован"
+    )
+    show_on_homepage = models.BooleanField(
+        default=False,
+        verbose_name="Показывать на главной"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

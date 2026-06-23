@@ -9,14 +9,17 @@ class ReviewAdmin(admin.ModelAdmin):
         "name",
         "rating",
         "is_published",
+        "show_on_homepage",
         "created_at"
     )
 
     list_filter = (
         "rating",
-        "is_published"
+        "is_published",
+        "show_on_homepage"
     )
 
     list_editable = (
         "is_published",
+        "show_on_homepage",
     )

@@ -9,7 +9,10 @@ from django.http import JsonResponse
 
 # ГЛАВНАЯ
 def home(request):
-    reviews = Review.objects.filter(is_published=True)[:6]
+    reviews = Review.objects.filter(
+        is_published=True,
+        show_on_homepage=True
+    )[:6]
 
     recommended = Product.objects.order_by("?")[:5]
 
