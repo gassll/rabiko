@@ -16,8 +16,22 @@ class CartService:
     def add(self, variant_id, quantity=1):
         variant_id = str(variant_id)
 
-        self.cart[variant_id] = self.cart.get(variant_id, 0) + quantity
+        current = self.cart.get(variant_id, 0)
+
+        limit_reached = False
+
+        if current >= 20:
+            return current, True  # уже лимит
+
+        new_qty = min(current + quantity, 20)
+
+        if new_qty == 20:
+            limit_reached = True
+
+        self.cart[variant_id] = new_qty
         self.save()
+
+        return new_qty, limit_reached
 
     def decrease(self, variant_id):
         variant_id = str(variant_id)
@@ -66,16 +80,35 @@ class CartService:
     def get_count(self):
         return sum(self.cart.values())
 
+    def get_total(self):
+        from catalog.models import ProductVariant
+
+        variants = ProductVariant.objects.filter(id__in=self.cart.keys())
+
+        total = 0
+        for v in variants:
+            qty = self.cart.get(str(v.id), 0)
+            total += qty * v.product.price
+
+        return total
+
 
 # ----------------- VIEWS -----------------
 
+
 def add_to_cart(request, variant_id):
     cart = CartService(request)
-    cart.add(variant_id)
+
+    qty, limit_reached = cart.add(variant_id)
+
+    variant = ProductVariant.objects.get(id=variant_id)
 
     return JsonResponse({
-        "qty": cart.cart.get(str(variant_id), 0),
-        "count": cart.get_count()
+        "qty": qty,
+        "count": cart.get_count(),
+        "line_sum": qty * variant.product.price,
+        "total": cart.get_total(),
+        "limit_reached": limit_reached,
     })
 
 
@@ -83,9 +116,17 @@ def decrease_quantity(request, variant_id):
     cart = CartService(request)
     cart.decrease(variant_id)
 
+    items, total = cart.items()
+
+    qty = cart.cart.get(str(variant_id), 0)
+    variant = ProductVariant.objects.get(id=variant_id)
+    line_sum = qty * variant.product.price
+
     return JsonResponse({
-        "qty": cart.cart.get(str(variant_id), 0),
-        "count": cart.get_count()
+        "qty": qty,
+        "count": cart.get_count(),
+        "line_sum": line_sum,
+        "total": total,
     })
 
 

@@ -508,6 +508,63 @@
             }
         }
 
+        @media (max-width: 900px) {
+
+            /* ===== HERO ===== */
+            .hero {
+                padding: 70px 25px;
+                text-align: center;
+            }
+
+            .hero-content {
+                margin: 0 auto;
+            }
+
+            /* ===== REVIEWS ===== */
+            .reviews-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .reviews-grid {
+                grid-template-columns: 1fr;
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .reviews-arrow {
+                width: auto;
+                display: flex;
+                justify-content: center;
+                margin-top: 15px;
+            }
+
+            /* ===== RECOMMENDED ===== */
+            .recommended-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .recommended-grid {
+                grid-template-columns: 1fr;
+                width: 100%;
+                justify-items: center;
+            }
+
+            /* ВАЖНО — фикс растяжения карточек */
+            .product-card {
+                width: 100%;
+                max-width: 360px;
+            }
+
+            .recommended-arrow {
+                width: auto;
+                display: flex;
+                justify-content: center;
+                margin-top: 15px;
+            }
+        }
+
         @media (max-width: 768px) {
 
             .hero {

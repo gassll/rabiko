@@ -241,6 +241,12 @@
             font-weight: 700;
             color: #6b4f3a;
         }
+
+        .order-product-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
     </style>
 
     <div class="checkout-page">
@@ -256,33 +262,37 @@
                 {% for item in items %}
                     <div class="order-item">
 
-                        <div class="order-product">
+                        <a href="{% url 'product_detail' item.variant.product.id %}"
+                           class="order-product-link">
 
-                            <div class="order-image-wrapper">
+                            <div class="order-product">
 
-                                <img
-                                        src="{{ item.variant.product.image.url }}"
-                                        class="order-image"
-                                        alt="{{ item.variant }}">
+                                <div class="order-image-wrapper">
+
+                                    <img src="{{ item.variant.product.image.url }}"
+                                         class="order-image"
+                                         alt="{{ item.variant }}">
+
+                                </div>
+
+                                <div>
+
+                                    <div class="order-name">
+                                        {{ item.variant }}
+                                    </div>
+
+                                    <div class="order-qty">
+                                        Количество: {{ item.quantity }}
+                                    </div>
+
+                                </div>
 
                             </div>
 
-                            <div>
-
-                                <div class="order-name">
-                                    {{ item.variant }}
-                                </div>
-
-                                <div class="order-qty">
-                                    Количество: {{ item.quantity }}
-                                </div>
-
-                            </div>
-
-                        </div>
+                        </a>
 
                         <div class="item-price">
-                            {{ item.sum|rub}}
+                            {{ item.sum|rub }}
                         </div>
 
                     </div>
